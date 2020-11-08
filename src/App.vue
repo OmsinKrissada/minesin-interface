@@ -6,19 +6,31 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
+import { Vue, Component } from "vue-property-decorator";
 import NavBar from "@/components/NavBar.vue";
+// import socket from "./socket";
+import socketio from "socket.io-client";
+console.log("Hello! Outside");
 
-@Component({
-	components: {
-		NavBar,
-	},
-})
+const socket = socketio.io("ws://omsinkrissada.sytes.net/", {
+	secure: true,
+	// forceNew: true,
+	// autoConnect: true,
+	transports: ["websocket"],
+	// timeout: 100000,
+});
+
+socket.on("connect", (data: string) => {
+	console.log('yay')
+	console.log(`received as ${data}`);
+});
+
+socket.on("ping", function (data: string) {
+	socket.emit("pong", { beat: 1 });
+});
+
 export default class App extends Vue {
-	created() {
-		console.log("Hello!");
-	}
+	// created() {}
 }
 </script>
 

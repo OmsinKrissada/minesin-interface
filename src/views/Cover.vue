@@ -75,8 +75,9 @@
 </template>
 
 <script>
-import socketio from "socket.io-client";
-const socket = socketio.io("http://");
+import { Vue } from "vue-property-decorator";
+
+export default class Cover extends Vue {}
 </script>
 
 <style scoped lang="scss">
