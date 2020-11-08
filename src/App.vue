@@ -1,6 +1,6 @@
 <template>
 	<div id="app">
-		<NavBar class="nav" v-if="this.$route.path != '/'" />
+		<NavBar v-if="this.$route.path != '/'" />
 		<router-view class="view" />
 	</div>
 </template>
@@ -67,14 +67,10 @@ export default class App extends Vue {
 	color: #2c3e50;
 }
 
-.nav {
-	flex: 0 0 25rem;
-}
-
 .view {
 	// position: relative;
 	// width: eval(100vw - 20rem);
-	background-color: grey;
+	// background-color: grey;
 	width: 100%;
 	margin: 1rem;
 }

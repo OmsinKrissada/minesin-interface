@@ -1,12 +1,17 @@
 <template>
-	<div class="about">
-		<h1>This is an about page</h1>
+	<div>
+		<p>This is an about page</p>
 	</div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import { Vue, Component } from 'vue-property-decorator'
+
+@Component({})
 
 export default class Members extends Vue { }
 
 </script>
+
+<style scoped lang="scss">
+</style>

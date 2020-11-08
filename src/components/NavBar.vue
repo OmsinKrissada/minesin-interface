@@ -37,6 +37,7 @@ export default class NavBar extends Vue { }
 	height: 100vh;
 
 	display: flex;
+	flex: 0 0 25rem;
 	flex-direction: column;
 	justify-content: flex-start;
 	align-items: center;
