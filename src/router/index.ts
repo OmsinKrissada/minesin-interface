@@ -8,8 +8,13 @@ Vue.use(VueRouter)
 const routes: Array<RouteConfig> = [
 	{
 		path: "/",
-		name: "Dashboard",
+		name: "Cover",
 		component: Cover
+	},
+	{
+		path: "/dashboard",
+		name: "Dashboard",
+		component: Dashboard
 	},
 	{
 		path: "/members",
