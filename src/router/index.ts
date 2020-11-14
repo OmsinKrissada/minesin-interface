@@ -3,6 +3,7 @@ import VueRouter, { RouteConfig } from "vue-router"
 import Dashboard from "../views/Dashboard.vue"
 import Cover from "../views/Cover.vue"
 import Members from "../views/Members.vue"
+import Map from "../views/Map.vue"
 
 Vue.use(VueRouter)
 
@@ -25,7 +26,12 @@ const routes: Array<RouteConfig> = [
 		// this generates a separate chunk (about.[hash].js) for this route
 		// which is lazy-loaded when the route is visited.
 		// component: () => import(/* webpackChunkName: "about" */ "../views/Members.vue")
-	}
+	},
+	{
+		path: "/map",
+		name: "Map",
+		component: Map
+	},
 ]
 
 const router = new VueRouter({

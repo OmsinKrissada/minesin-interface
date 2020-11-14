@@ -6,9 +6,9 @@
 </template>
 
 <script>
-export default {
-
-}
+import { Component, Vue } from 'vue-property-decorator';
+@Component({})
+export default class Cover extends Vue { }
 </script>
 
 <style>
