@@ -56,6 +56,10 @@ export default class App extends Vue {
 	// font-size: 16px;
 }
 
+body::-webkit-scrollbar {
+	width: 0rem;
+}
+
 #app {
 	position: relative;
 	display: flex;
@@ -72,6 +76,6 @@ export default class App extends Vue {
 	// width: eval(100vw - 20rem);
 	// background-color: grey;
 	width: 100%;
-	margin: 1rem;
+	margin: 0rem;
 }
 </style>
