@@ -1,7 +1,9 @@
 <template>
 	<div id="app">
 		<NavBar v-if="this.$route.path != '/'" />
-		<router-view class="view" />
+		<transition name="fade">
+			<router-view class="view" />
+		</transition>
 	</div>
 </template>
 
@@ -56,6 +58,10 @@ export default class App extends Vue {
 	// font-size: 16px;
 }
 
+body {
+	overflow: hidden; /* Hide scrollbars */
+}
+
 body::-webkit-scrollbar {
 	width: 0rem;
 }
@@ -77,5 +83,13 @@ body::-webkit-scrollbar {
 	// background-color: grey;
 	width: 100%;
 	margin: 0rem;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+	transition: opacity 0.25s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+	opacity: 0;
 }
 </style>

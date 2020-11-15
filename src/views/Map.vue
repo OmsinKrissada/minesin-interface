@@ -17,7 +17,7 @@ import { Vue, Component } from 'vue-property-decorator'
 
 @Component({})
 export default class Map extends Vue {
-	link = window.location.protocol + "//" + window.location.hostname + ":8123";
+	link = window.location.protocol + '//' + window.location.hostname + '/minecraft/survival/';
 }
 
 </script>
