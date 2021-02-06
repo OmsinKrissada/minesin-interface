@@ -7,5 +7,6 @@ module.exports = {
 				return args;
 			});
 	},
-	publicPath: "/minecraft/"
+	// publicPath: "/minecraft/"
+	publicPath: "/"
 };

@@ -13,26 +13,6 @@
 import { Vue, Component } from "vue-property-decorator";
 
 import NavBar from "@/components/NavBar.vue";
-import socketio from "socket.io-client";
-
-console.log("Hello! Outside");
-
-const socket = socketio.io("/", {
-	secure: true,
-	// forceNew: true,
-	// autoConnect: true,
-	transports: ["websocket"],
-	// timeout: 100000,
-});
-
-socket.on("connect", (data: string) => {
-	console.log("yay");
-	console.log(`received as ${data}`);
-});
-
-socket.on("ping", function (data: string) {
-	socket.emit("pong", { beat: 1 });
-});
 
 @Component({
 	components: {
@@ -69,6 +49,8 @@ body::-webkit-scrollbar {
 #app {
 	position: relative;
 	display: flex;
+	height: 100%;
+	flex-direction: column;
 	justify-content: flex-start;
 	font-family: Avenir, Helvetica, Arial, sans-serif;
 	-webkit-font-smoothing: antialiased;
@@ -77,11 +59,18 @@ body::-webkit-scrollbar {
 	color: #2c3e50;
 }
 
+#nav {
+	position: relative;
+	height: 20rem;
+	width: 100vw;
+}
+
 .view {
 	// position: relative;
 	// width: eval(100vw - 20rem);
 	// background-color: grey;
 	width: 100%;
+	height: 100vh;
 	margin: 0rem;
 }
 

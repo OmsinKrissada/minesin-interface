@@ -1,25 +1,24 @@
 <template>
-	<div id="nav">
-		<div class="logo">
+	<span id="container">
+		<!-- <div class="logo">
 			<router-link to="/">MINESIN</router-link>
-		</div>
+		</div> -->
+		<router-link class="link" id="back-btn" to="/">
+			<!-- <svg style="width: 1.5rem">
+				<use xlink:href="@/assets/left-arrow.svg#Layer_1"></use>
+			</svg> -->
+			<p>Back</p>
+		</router-link>
 		<router-link class="link" to="/dashboard">
-			<img src="@/assets/map-icon.png" width="auto" height="50 rem" />
 			<p>Dashboard</p>
 		</router-link>
 		<router-link class="link" to="/members">
-			<img src="@/assets/map-icon.png" width="auto" height="50 rem" />
 			<p>Members</p>
 		</router-link>
-		<router-link class="link" to="/chat">
-			<img src="@/assets/map-icon.png" width="auto" height="50 rem" />
-			<p>Chat</p>
-		</router-link>
 		<router-link class="link" to="/map">
-			<img src="@/assets/map-icon.png" width="auto" height="50 rem" />
-			<p>Map</p>
+			<p>DynMap</p>
 		</router-link>
-	</div>
+	</span>
 </template>
 
 
@@ -34,62 +33,75 @@ export default class NavBar extends Vue { }
 
 
 <style scoped lang="scss">
-#nav {
+#container {
 	// padding: 30px;
-	background-color: #1d3557;
+	background-color: rgb(255, 255, 255);
+	border-bottom: 1px solid grey;
 	position: relative;
-	height: 100vh;
+	width: 100vw;
+	// margin-bottom: 20px;
 
 	display: flex;
-	flex: 0 0 20rem;
-	flex-direction: column;
-	justify-content: flex-start;
+	// flex: 0 0 20rem;
+	justify-content: center;
 	align-items: center;
-	border-right: 1px solid #f1faee;
+	box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.5);
 
-	.logo {
-		padding-top: 2.5rem;
-		padding-bottom: 2.5rem;
-		margin-bottom: 1.5rem;
-		width: 100%;
-		// margin-bottom: 3rem;
-		text-align: center;
-		border-bottom: 2px solid #ade8f4;
+	// .logo {
+	// 	padding-top: 2.5rem;
+	// 	padding-bottom: 2.5rem;
+	// 	margin-bottom: 1.5rem;
+	// 	width: 100%;
+	// 	// margin-bottom: 3rem;
+	// 	text-align: center;
+	// 	border-bottom: 2px solid #ade8f4;
 
-		a {
-			font-family: "Raleway";
-			font-size: 3rem;
-			font-weight: 1000;
-			text-decoration: none;
-			color: #f1faee;
-		}
-	}
+	// 	a {
+	// 		font-family: "Raleway";
+	// 		font-size: 3rem;
+	// 		font-weight: 1000;
+	// 		text-decoration: none;
+	// 		color: #f1faee;
+	// 	}
+	// }
 
 	.link {
 		// background-color: green;
-		height: 4rem;
-		width: 100%;
-		display: flex;
-		justify-content: flex-start;
-		align-items: center;
+		display: inline-block;
+		height: auto;
+
+		margin: 10px;
+		padding: 0 10px 0 10px;
 
 		text-decoration: none;
-		// padding: 3rem;
+		color: black;
+		background-color: rgba(0, 0, 0, 0.001);
 
-		img {
-			margin-left: 3rem;
-			margin-right: 2rem;
-		}
+		border: 1.5px rgba(0, 0, 0, 0.2) solid;
+		border-radius: 8px;
+		box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+
+		transition: 0.25s;
 
 		p {
+			padding: 8px;
 			font-family: "Quicksand", sans-serif;
-			font-size: 1.5rem;
+			font-size: 1.2rem;
 			font-weight: bold;
-			color: #a8dadc;
 		}
+
+		&:hover {
+			background-color: rgba(0, 0, 0, 0.1);
+		}
+
 		&.router-link-exact-active {
-			background-color: #0077b6;
+			color: white;
+			background-color: rgba(24, 151, 255, 0.9);
 		}
+	}
+
+	#back-btn {
+		margin-right: auto;
 	}
 }
 </style>
