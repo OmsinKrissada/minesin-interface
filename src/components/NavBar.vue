@@ -7,7 +7,7 @@
 			<!-- <svg style="width: 1.5rem">
 				<use xlink:href="@/assets/left-arrow.svg#Layer_1"></use>
 			</svg> -->
-			<p>Back</p>
+			<p>Logout</p>
 		</router-link>
 		<router-link class="link" to="/dashboard">
 			<p>Dashboard</p>
@@ -102,6 +102,8 @@ export default class NavBar extends Vue { }
 
 	#back-btn {
 		margin-right: auto;
+		background-color: rgb(255, 94, 94);
+		color: white;
 	}
 }
 </style>
