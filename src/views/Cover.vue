@@ -10,7 +10,7 @@
 				@keyup.enter="isCorrect"
 				placeholder="Passphrase"
 			/>
-			<button @click="isCorrect" id="proceed-button">
+			<button @click="isCorrect" id="proceed-button" class="button">
 				<p>Proceed</p>
 				<!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 				<svg>

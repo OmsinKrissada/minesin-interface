@@ -3,19 +3,19 @@
 		<!-- <div class="logo">
 			<router-link to="/">MINESIN</router-link>
 		</div> -->
-		<router-link class="link" id="back-btn" to="/">
+		<router-link class="link button" id="back-btn" to="/">
 			<!-- <svg style="width: 1.5rem">
 				<use xlink:href="@/assets/left-arrow.svg#Layer_1"></use>
 			</svg> -->
 			<p>Logout</p>
 		</router-link>
-		<router-link class="link" to="/dashboard">
+		<router-link class="link button" to="/dashboard">
 			<p>Dashboard</p>
 		</router-link>
-		<router-link class="link" to="/members">
+		<router-link class="link button" to="/members">
 			<p>Members</p>
 		</router-link>
-		<router-link class="link" to="/map">
+		<router-link class="link button" to="/map">
 			<p>DynMap</p>
 		</router-link>
 	</span>
@@ -36,7 +36,7 @@ export default class NavBar extends Vue { }
 #container {
 	// padding: 30px;
 	background-color: rgb(255, 255, 255);
-	border-bottom: 1px solid grey;
+	border-bottom: 1px solid rgba(128, 128, 128, 0.555);
 	position: relative;
 	width: 100vw;
 	// margin-bottom: 20px;
@@ -72,16 +72,7 @@ export default class NavBar extends Vue { }
 
 		margin: 10px;
 		padding: 0 10px 0 10px;
-
-		text-decoration: none;
-		color: black;
-		background-color: rgba(0, 0, 0, 0.001);
-
-		border: 1.5px rgba(0, 0, 0, 0.2) solid;
-		border-radius: 8px;
-		box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-
-		transition: 0.25s;
+		box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.3);
 
 		p {
 			padding: 8px;
@@ -92,6 +83,7 @@ export default class NavBar extends Vue { }
 
 		&:hover {
 			background-color: rgba(0, 0, 0, 0.1);
+			box-shadow: 0px 0px 1.5px rgba(0, 0, 0, 0.3);
 		}
 
 		&.router-link-exact-active {
