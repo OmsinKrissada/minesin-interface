@@ -1,6 +1,7 @@
-<template>
-	<div>
+<template id='temp'>
+	<div id="box">
 		<iframe
+			v-if="success"
 			:src="link"
 			width="100%"
 			height="100%"
@@ -11,14 +12,17 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
+import { Options, Vue } from 'vue-class-component'
 
 
 
-@Component({})
+@Options({})
 export default class Map extends Vue {
-	link = window.location.protocol + '//' + window.location.hostname + '/api/minecraft/map/';
-	// link = "https://map.wynncraft.com"
+	success = true;
+	link = '';
+	mounted() {
+		this.link = 'http://ubunsin/api/minecraft/map/'
+	}
 }
 
 </script>
@@ -26,5 +30,15 @@ export default class Map extends Vue {
 <style scoped lang="scss">
 h3 {
 	position: absolute;
+}
+iframe {
+	// position: absolute;
+}
+#box {
+	height: 100vh;
+	margin: 0%;
+}
+#temp {
+	margin: 0%;
 }
 </style>

@@ -24,9 +24,9 @@
 
 <script lang="ts">
 
-import { Vue, Component } from "vue-property-decorator";
+import { Options, Vue } from "vue-class-component";
 
-// @Component
+@Options({})
 export default class NavBar extends Vue { }
 
 </script>

@@ -1,45 +1,48 @@
 <template>
 	<div id="app">
 		<NavBar v-if="this.$route.path != '/'" />
-		<transition name="fade" mode="out-in">
-			<router-view class="view" />
-		</transition>
+		<router-view v-slot="{ Component }" class="view">
+			<transition name="fade" mode="out-in">
+				<component :is="Component" />
+			</transition>
+		</router-view>
 	</div>
 </template>
 
 
 <script lang="ts">
 
-import { Vue, Component } from "vue-property-decorator";
+import { Vue, Options } from 'vue-class-component'
 
 import NavBar from "@/components/NavBar.vue";
+import { endpoint } from './config.json';
 
-@Component({
+@Options({
 	components: {
 		NavBar,
 	},
 })
-
 export default class App extends Vue {
 	created() {
 		console.log(this.$route.path)
+		localStorage.setItem('endpoint', endpoint)
 	}
 }
 
 </script>
 
 
-<style lang="scss">
+<style>
 @import url("https://fonts.googleapis.com/css2?family=Raleway:wght@300;400&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Quicksand&display=swap");
 
 * {
 	margin: 0;
-	// font-size: 16px;
+	/* font-size: 16px; */
 }
 
 body {
-	overflow: hidden; /* Hide scrollbars */
+	overflow: auto; /* Hide scrollbars */
 }
 
 body::-webkit-scrollbar {
@@ -78,9 +81,9 @@ body::-webkit-scrollbar {
 }
 
 .view {
-	// position: relative;
-	// width: eval(100vw - 20rem);
-	// background-color: grey;
+	/* position: relative;
+	width: eval(100vw - 20rem);
+	background-color: grey; */
 	width: 100%;
 	flex-grow: 1;
 	margin: 0rem;

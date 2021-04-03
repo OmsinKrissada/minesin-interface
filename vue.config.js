@@ -1,5 +1,5 @@
 module.exports = {
-	chainWebpack: config => {
+    chainWebpack: config => {
 		config
 			.plugin('html')
 			.tap(args => {
@@ -7,6 +7,9 @@ module.exports = {
 				return args;
 			});
 	},
-	// publicPath: "/minecraft/"
-	publicPath: "/minecraft"
+
+    // publicPath: "/minecraft/"
+    publicPath: '/minecraft',
+
+    assetsDir: 'assets'
 };

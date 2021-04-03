@@ -2,22 +2,30 @@
 	<div id="page">
 		<div id="box">
 			<h1 id="logo">MINESIN</h1>
-			<h1>Welcome to my web controller, my friend.</h1>
-			<input
-				type="password"
-				class="field"
-				v-model="pass"
-				@keyup.enter="isCorrect"
-				placeholder="Passphrase"
-			/>
-			<button @click="isCorrect" id="proceed-button" class="button">
-				<p>Proceed</p>
-				<!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-				<svg>
-					<use xlink:href="@/assets/right-arrow.svg#Layer_1"></use>
-				</svg>
-			</button>
-			<p v-if="wrongPass" id="wrong-pass-text">Incorrect passphrase</p>
+			<h1>Welcome to my web dashboard, my friends.</h1>
+			<form action="" @submit="authenticate">
+				<input
+					type="password"
+					class="field"
+					v-model="pass"
+					placeholder="Passphrase"
+					autocomplete="current-password"
+					autofocus
+				/>
+				<button v-if="!sending" id="proceed-button" class="button">
+					<p v-if="!sending">Proceed</p>
+					<!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+					<svg v-if="!sending">
+						<use
+							xlink:href="@/assets/right-arrow.svg#Layer_1"
+						></use>
+					</svg>
+				</button>
+				<pulse-loader :loading="sending"></pulse-loader>
+			</form>
+			<p id="error-text">
+				{{ errortxt }}
+			</p>
 		</div>
 	</div>
 </template>
@@ -25,26 +33,53 @@
 
 <script lang="ts">
 import router from '@/router';
-import { Component, Vue } from 'vue-property-decorator';
-import Auth from '../auth'
+import { Options, Vue } from 'vue-class-component';
+import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 
-@Component({})
+import axios, { AxiosError } from 'axios';
 
+@Options({
+	components: {
+		PulseLoader
+	}
+})
 export default class Cover extends Vue {
 	pass = '';
-	TOKEN = Auth.token;
-	wrongPass = false;
-	isCorrect() {
-		if (this.pass === 'iamcool') {
+	error = false;
+	errortxt = '';
+	sending = false;
+	authenticate(e: any) {
+		const endpoint = localStorage.endpoint;
+		if (this.sending) {
+			e.preventDefault();
+			return;
+		} else if (this.pass == '') {
+			e.preventDefault();
+			this.errortxt = 'Passphrase cannot be empty';
+			return;
+		}
 
-			Auth.setToken('yayyyyy')
-			// this.TOKEN = token;
+		this.sending = true;
+		axios.post(endpoint + '/login', { passphrase: this.pass }, { timeoutErrorMessage: 'Time out!' }).then(res => {
+			this.errortxt = '';
+			localStorage.setItem('accessToken', res.data.accessToken);
+			this.$router.push('dashboard')
 			router.push('dashboard')
-		} else this.wrongPass = true;
+		}).catch((err: AxiosError) => {
+			if (err.response?.status == 403)
+				this.errortxt = 'Wrong Passphrase'
+			else if (err.message == 'Network Error') {
+				this.errortxt = 'Cannot communicate with server, please contact Omsin.'
+			}
+			else {
+				console.error(err)
+				this.errortxt = 'An error has occured: ' + err.message;
+			}
+		}).finally(() => this.sending = false)
+		e.preventDefault()
 	}
 }
-// this.$router.push('dashboard')
-// router.push('dashboard')
+
 
 </script>
 
@@ -65,7 +100,7 @@ export default class Cover extends Vue {
 	font-size: 1rem;
 	color: white;
 }
-#wrong-pass-text {
+#error-text {
 	margin: 15px;
 	color: rgb(255, 106, 106);
 }

@@ -5,9 +5,9 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
+import { Options, Vue } from 'vue-class-component'
 
-@Component({})
+@Options({})
 
 export default class Members extends Vue { }
 
