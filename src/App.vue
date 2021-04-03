@@ -38,7 +38,7 @@ export default class App extends Vue {
 
 * {
 	margin: 0;
-	/* font-size: 16px; */
+	font-size: 20px;
 }
 
 body {
@@ -75,7 +75,7 @@ body::-webkit-scrollbar {
 	background-color: rgba(0, 0, 0, 0.001);
 
 	border: 1.5px rgba(0, 0, 0, 0.2) solid;
-	border-radius: 8px;
+	border-radius: 5px;
 
 	transition: 0.25s;
 }

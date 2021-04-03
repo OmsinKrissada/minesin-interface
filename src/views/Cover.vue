@@ -101,7 +101,7 @@ export default class Cover extends Vue {
 	color: white;
 }
 #error-text {
-	margin: 15px;
+	margin: 1rem;
 	color: rgb(255, 106, 106);
 }
 #page {
@@ -123,6 +123,7 @@ export default class Cover extends Vue {
 #box {
 	h1 {
 		font-family: "Raleway", Times, serif;
+		font-size: 2rem;
 		color: white;
 		margin-bottom: 100px;
 	}
@@ -136,8 +137,8 @@ export default class Cover extends Vue {
 	justify-content: space-evenly;
 
 	margin: auto;
-	width: 200px;
-	height: 50px;
+	width: 12.5rem;
+	height: 3.125rem;
 
 	border: 1px solid rgb(42, 214, 119);
 	border-radius: 10px;

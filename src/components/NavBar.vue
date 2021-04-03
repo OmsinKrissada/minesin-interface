@@ -3,7 +3,12 @@
 		<!-- <div class="logo">
 			<router-link to="/">MINESIN</router-link>
 		</div> -->
-		<router-link class="link button" id="back-btn" to="/">
+		<router-link
+			v-on:click="logout"
+			class="link button"
+			id="back-btn"
+			to="/"
+		>
 			<!-- <svg style="width: 1.5rem">
 				<use xlink:href="@/assets/left-arrow.svg#Layer_1"></use>
 			</svg> -->
@@ -12,9 +17,9 @@
 		<router-link class="link button" to="/dashboard">
 			<p>Dashboard</p>
 		</router-link>
-		<router-link class="link button" to="/members">
+		<!-- <router-link class="link button" to="/members">
 			<p>Members</p>
-		</router-link>
+		</router-link> -->
 		<router-link class="link button" to="/map">
 			<p>DynMap</p>
 		</router-link>
@@ -27,7 +32,12 @@
 import { Options, Vue } from "vue-class-component";
 
 @Options({})
-export default class NavBar extends Vue { }
+export default class NavBar extends Vue {
+	logout() {
+		localStorage.removeItem('accessToken')
+		console.log('logged out, cleared token')
+	}
+}
 
 </script>
 
@@ -35,7 +45,7 @@ export default class NavBar extends Vue { }
 <style scoped lang="scss">
 #container {
 	// padding: 30px;
-	background-color: rgb(255, 255, 255);
+	background-color: rgb(21, 24, 29);
 	border-bottom: 1px solid rgba(128, 128, 128, 0.555);
 	position: relative;
 	width: 100vw;
@@ -72,13 +82,14 @@ export default class NavBar extends Vue { }
 
 		margin: 10px;
 		padding: 0 10px 0 10px;
-		box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.3);
+		// box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.3);
 
 		p {
 			padding: 8px;
 			font-family: "Quicksand", sans-serif;
 			font-size: 1.2rem;
 			font-weight: bold;
+			color: rgb(182, 182, 182);
 		}
 
 		&:hover {
@@ -88,13 +99,13 @@ export default class NavBar extends Vue { }
 
 		&.router-link-exact-active {
 			color: white;
-			background-color: rgba(24, 151, 255, 0.9);
+			background-color: #1b487a;
 		}
 	}
 
 	#back-btn {
 		margin-right: auto;
-		background-color: rgb(255, 94, 94);
+		background-color: #75161e;
 		color: white;
 	}
 }
