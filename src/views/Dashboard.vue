@@ -89,6 +89,7 @@ import axios, { AxiosError } from 'axios';
 import moment from 'moment';
 import { Chart, LinearScale, registerables } from 'chart.js'
 import { endpoint } from '../config.json';
+import * as Helper from '@/Helper';
 
 @Options({
 	components: {
@@ -120,8 +121,8 @@ export default class Dashboard extends Vue {
 
 
 	mounted() {
-		axios.get(endpoint + '/members', { headers: { Authorization: `Bearer ${localStorage.accessToken}` } }).then(res => {
-			for (const member of res.data) {
+		Helper.get('/members').then(data => {
+			for (const member of data) {
 				if (member.online) {
 					member.status = 'Online'
 					member.datetime = member.onlineFor ? `${this.fullDurationString(member.onlineFor)}` : 'invalid time format'
@@ -138,6 +139,24 @@ export default class Dashboard extends Vue {
 				this.error = true;
 			}
 		}).finally(() => this.loading_member = false)
+		// axios.get(endpoint + '/members', { headers: { Authorization: `Bearer ${localStorage.accessToken}` } }).then(res => {
+		// 	for (const member of res.data) {
+		// 		if (member.online) {
+		// 			member.status = 'Online'
+		// 			member.datetime = member.onlineFor ? `${this.fullDurationString(member.onlineFor)}` : 'invalid time format'
+		// 		} else {
+		// 			member.status = 'Last seen'
+		// 			member.datetime = member.lastseen ? `${moment(member.lastseen).fromNow()}` : 'invalid date format'
+		// 			console.log(member.lastseen)
+		// 		}
+		// 		this.members.push(member);
+		// 	}
+		// }).catch((err: AxiosError) => {
+		// 	if (err.message) {
+		// 		console.error(err.message)
+		// 		this.error = true;
+		// 	}
+		// }).finally(() => this.loading_member = false)
 
 		Chart.register(...registerables);
 
@@ -342,8 +361,9 @@ export default class Dashboard extends Vue {
 	list-style: none;
 	text-align: left;
 
-	box-shadow: 0px 0px 10px rgba(179, 179, 179, 0.493);
-	background: rgba(255, 255, 255, 0.61);
+	box-shadow: 0px 0px 6px rgba(179, 179, 179, 0.493);
+	// border: #494949;
+	background: rgb(120, 120, 120);
 	color: #1b457a;
 
 	#lefter {
@@ -363,7 +383,7 @@ export default class Dashboard extends Vue {
 		}
 		#m_uuid {
 			// color: rgb(112, 112, 112);
-			color: rgb(57, 109, 173);
+			color: rgb(26, 100, 170);
 			font-size: 0.8rem;
 			font-family: Quicksand;
 		}
@@ -375,7 +395,7 @@ export default class Dashboard extends Vue {
 		justify-content: space-around;
 		align-items: flex-end;
 
-		color: #494949;
+		color: #353535;
 		font-family: Quicksand;
 
 		#m_status {

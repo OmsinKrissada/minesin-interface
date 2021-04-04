@@ -63,7 +63,6 @@ export default class Cover extends Vue {
 		axios.post(endpoint + '/login', { passphrase: this.pass }, { timeoutErrorMessage: 'Time out!' }).then(res => {
 			this.errortxt = '';
 			localStorage.setItem('accessToken', res.data.accessToken);
-			this.$router.push('dashboard')
 			router.push('dashboard')
 		}).catch((err: AxiosError) => {
 			if (err.response?.status == 403)

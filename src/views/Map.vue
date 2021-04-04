@@ -2,7 +2,7 @@
 	<div id="box">
 		<iframe
 			v-if="success"
-			:src="link"
+			:src="page"
 			width="100%"
 			height="100%"
 			title="World Map"
@@ -12,17 +12,20 @@
 </template>
 
 <script lang="ts">
+import axios from 'axios';
 import { Options, Vue } from 'vue-class-component'
 import { endpoint } from '../config.json';
+import { authHeader } from '../Helper';
 
 
 
 @Options({})
 export default class Map extends Vue {
+
 	success = true;
-	link = '';
-	mounted() {
-		this.link = endpoint + '/map'
+	page = '';
+	async mounted() {
+		this.page = await axios.get(endpoint + '/map', authHeader);
 	}
 }
 

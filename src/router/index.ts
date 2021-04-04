@@ -5,8 +5,6 @@ import Home from '../views/Home.vue'
 import Cover from "../views/Cover.vue"
 import Map from "../views/Map.vue"
 
-import Auth from '../auth';
-
 function hasToken(to: any, from: any, next: any) {
 	if (localStorage.accessToken) return next();
 	else return next('/');

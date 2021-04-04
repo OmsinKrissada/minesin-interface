@@ -3,17 +3,12 @@
 		<!-- <div class="logo">
 			<router-link to="/">MINESIN</router-link>
 		</div> -->
-		<router-link
-			v-on:click="logout"
-			class="link button"
-			id="back-btn"
-			to="/"
-		>
+		<button v-on:click="logout" class="link button" id="back-btn">
 			<!-- <svg style="width: 1.5rem">
 				<use xlink:href="@/assets/left-arrow.svg#Layer_1"></use>
 			</svg> -->
 			<p>Logout</p>
-		</router-link>
+		</button>
 		<router-link class="link button" to="/dashboard">
 			<p>Dashboard</p>
 		</router-link>
@@ -36,6 +31,8 @@ export default class NavBar extends Vue {
 	logout() {
 		localStorage.removeItem('accessToken')
 		console.log('logged out, cleared token')
+
+		this.$router.push('/')
 	}
 }
 
