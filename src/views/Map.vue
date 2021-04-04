@@ -13,6 +13,7 @@
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component'
+import { endpoint } from '../config.json';
 
 
 
@@ -21,7 +22,7 @@ export default class Map extends Vue {
 	success = true;
 	link = '';
 	mounted() {
-		this.link = 'http://ubunsin/api/minecraft/map/'
+		this.link = endpoint + '/map'
 	}
 }
 
