@@ -12,7 +12,7 @@ export async function get(path: string) {
 		return (await axios.get(`${endpoint}${path}`, { headers: { Authorization: `Bearer ${localStorage.accessToken}` } })).data;
 	} catch (err) {
 		if (axios.isAxiosError(err)) {
-			if (Math.floor(err.response?.data.code / 1000)) { // bad token -> re-login
+			if (Math.floor(err.response?.data.code / 1000) == 1) { // bad token -> re-login
 				console.log('code', err.response?.data.code)
 				localStorage.removeItem('accessToken');
 				router.push('/')

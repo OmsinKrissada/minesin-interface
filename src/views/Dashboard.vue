@@ -38,6 +38,41 @@
 						</li>
 					</transition-group>
 				</ul>
+				<ul class="memberbox">
+					<ring-loader
+						:loading="loading_member"
+						color="#FFFFFF"
+						id="member-loader"
+					></ring-loader>
+					<p v-if="error" style="color: #ff0000aa">
+						Error loading list, try relog
+					</p>
+					<transition-group name="list" tag="p">
+						<li
+							v-for="member in members"
+							:key="member"
+							class="box memberitem"
+						>
+							<span id="lefter">
+								<img
+									:src="member.skinURL"
+									alt="skin"
+									width="50"
+									height="50"
+									id="m_skin"
+								/>
+								<div>
+									<h4 id="m_ign">{{ member.ign }}</h4>
+									<p id="m_uuid">{{ member.uuid }}</p>
+								</div>
+							</span>
+							<span id="righter">
+								<p id="m_status">{{ member.status }}</p>
+								<p id="m_datetime">{{ member.datetime }}</p>
+							</span>
+						</li>
+					</transition-group>
+				</ul>
 			</span>
 			<span id="statistic" class="box">
 				<div class="box">
@@ -315,9 +350,10 @@ export default class Dashboard extends Vue {
 }
 
 #leftbox {
-	display: flex;
+	display: block;
 	flex-direction: column;
 	background-color: #333536c5;
+	box-shadow: 0px 0px 10px #000000;
 	// width: 100%;
 	width: 50%;
 }
@@ -329,9 +365,10 @@ export default class Dashboard extends Vue {
 	padding: 15px;
 	width: auto;
 	height: 2rem;
-	color: #00a6ff;
+	color: #00ccff;
 	font-family: Raleway;
 	background-color: rgba(95, 97, 100, 0.397);
+	box-shadow: 0px 0px 3px #000000;
 }
 
 .box {
@@ -344,6 +381,8 @@ export default class Dashboard extends Vue {
 	flex-direction: column;
 	justify-content: space-evenly;
 	align-items: center;
+
+	// background-color: antiquewhite;
 
 	#member-loader {
 		padding: 15px;
@@ -361,10 +400,11 @@ export default class Dashboard extends Vue {
 	list-style: none;
 	text-align: left;
 
-	box-shadow: 0px 0px 6px rgba(179, 179, 179, 0.493);
+	// box-shadow: 0px 0px 6px rgba(179, 179, 179, 0.493);
+	box-shadow: 0px 0px 10px rgb(31, 31, 31);
 	// border: #494949;
-	background: rgb(120, 120, 120);
-	color: #1b457a;
+	background: rgb(65, 65, 65);
+	color: rgb(47, 153, 209);
 
 	#lefter {
 		display: flex;
@@ -376,6 +416,7 @@ export default class Dashboard extends Vue {
 			margin: 5px;
 			border-radius: 3px;
 			box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.678);
+			image-rendering: pixelated;
 		}
 		#m_ign {
 			font-size: 1.25rem;
@@ -383,9 +424,10 @@ export default class Dashboard extends Vue {
 		}
 		#m_uuid {
 			// color: rgb(112, 112, 112);
-			color: rgb(26, 100, 170);
+			color: rgb(110, 110, 110);
 			font-size: 0.8rem;
 			font-family: Quicksand;
+			font-weight: 500;
 		}
 	}
 
@@ -399,10 +441,12 @@ export default class Dashboard extends Vue {
 		font-family: Quicksand;
 
 		#m_status {
+			color: rgb(133, 133, 133);
 			font-weight: bold;
 		}
 
 		#m_datetime {
+			color: rgb(182, 182, 182);
 			font-size: 0.8rem;
 		}
 	}

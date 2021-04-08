@@ -2,11 +2,12 @@
 	<div id="box">
 		<iframe
 			v-if="success"
-			:src="page"
+			src="https://omsinkrissada.sytes.net/api/minecraft/map/"
 			width="100%"
 			height="100%"
 			title="World Map"
 		></iframe>
+		<!-- <div v-html="page"></div> -->
 		<!-- <h3>Map not available, sorry for your inconvenience.</h3> -->
 	</div>
 </template>
@@ -25,7 +26,7 @@ export default class Map extends Vue {
 	success = true;
 	page = '';
 	async mounted() {
-		this.page = await axios.get(endpoint + '/map', authHeader);
+		this.page = await (await axios.get(endpoint + '/map/.', authHeader)).data;
 	}
 }
 
