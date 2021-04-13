@@ -45,7 +45,7 @@ export default class NavBar extends Vue {
 	background-color: rgb(21, 24, 29);
 	border-bottom: 1px solid rgba(128, 128, 128, 0.555);
 	position: relative;
-	width: 100vw;
+	// width: 100vw;
 	// margin-bottom: 20px;
 
 	display: flex;

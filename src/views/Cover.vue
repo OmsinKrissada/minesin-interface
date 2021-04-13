@@ -1,5 +1,13 @@
 <template>
-	<div id="page">
+	<div
+		id="page"
+		v-bind:style="{
+			backgroundImage:
+				'linear-gradient(to bottom,	rgba(0, 0, 0, 0.25),	rgba(0, 0, 0, 0.5)), url(' +
+				image +
+				')',
+		}"
+	>
 		<div id="box">
 			<h1 id="logo">MINESIN</h1>
 			<h1>Welcome to my web dashboard, my friends.</h1>
@@ -48,6 +56,12 @@ export default class Cover extends Vue {
 	error = false;
 	errortxt = '';
 	sending = false;
+	image = '';
+
+	mounted() {
+		this.image = require(`@/assets/bg/${Math.ceil(Math.random() * 21)}.png`);
+	}
+
 	authenticate(e: any) {
 		const endpoint = localStorage.endpoint;
 		if (this.sending) {
@@ -68,7 +82,7 @@ export default class Cover extends Vue {
 			if (err.response?.status == 403)
 				this.errortxt = 'Wrong Passphrase'
 			else if (err.message == 'Network Error') {
-				this.errortxt = 'Cannot communicate with server, please contact Omsin.'
+				this.errortxt = 'Please check your internet connection, if problem persists, contact Omsin.'
 			}
 			else {
 				console.error(err)
@@ -103,23 +117,32 @@ export default class Cover extends Vue {
 	margin: 1rem;
 	color: rgb(255, 106, 106);
 }
+
+// @function imgnum() {
+// 	@return var(--img-num);
+// }
+
+$imgnum: var(--img-num);
+
 #page {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-
-	background-image: linear-gradient(
-			to bottom,
-			rgba(0, 0, 0, 0.5),
-			rgba(0, 0, 0, 0.75)
-		),
-		url("../assets/wallpaper.jpg");
 	background-size: cover;
 	background-position: bottom;
+	background-color: black;
+
+	// transition: 0.5s;
 }
 
 #box {
+	#logo {
+		font-family: "MinecraftBig", Raleway;
+		font-size: 4rem;
+		font-weight: 100;
+		color: antiquewhite;
+	}
 	h1 {
 		font-family: "Raleway", Times, serif;
 		font-size: 2rem;

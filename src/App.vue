@@ -35,6 +35,14 @@ export default class App extends Vue {
 <style>
 @import url("https://fonts.googleapis.com/css2?family=Raleway:wght@300;400&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Quicksand&display=swap");
+@font-face {
+	font-family: "MinecraftBig";
+	src: url("assets/fonts/MinecraftBig.ttf") format("truetype");
+}
+@font-face {
+	font-family: "Minecraftia";
+	src: url("assets/fonts/Minecraftia.ttf") format("truetype");
+}
 
 * {
 	margin: 0;
@@ -64,7 +72,7 @@ body::-webkit-scrollbar {
 
 #nav {
 	position: relative;
-	height: 20rem;
+	/* height: 20rem; */
 	width: 100vw;
 }
 

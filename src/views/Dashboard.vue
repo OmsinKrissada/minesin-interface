@@ -44,8 +44,9 @@
 						color="#FFFFFF"
 						id="member-loader"
 					></ring-loader>
-					<p v-if="error" style="color: #ff0000aa">
-						Error loading list, try relog
+					<p v-if="neterror" style="color: #ff0000aa">
+						Error loading list, please check your internet
+						connection.
 					</p>
 					<transition-group name="list" tag="p">
 						<li
@@ -140,7 +141,7 @@ export default class Dashboard extends Vue {
 	loading_statChart = true;
 
 	members: any = [];
-	error = false;
+	neterror = false;
 
 	fullDurationString(duration: moment.Duration) {
 		let str = '';
@@ -171,7 +172,7 @@ export default class Dashboard extends Vue {
 		}).catch((err: AxiosError) => {
 			if (err.message) {
 				console.error(err.message)
-				this.error = true;
+				this.neterror = true;
 			}
 		}).finally(() => this.loading_member = false)
 		// axios.get(endpoint + '/members', { headers: { Authorization: `Bearer ${localStorage.accessToken}` } }).then(res => {
