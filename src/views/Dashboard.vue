@@ -76,7 +76,7 @@
 				</ul>
 			</span>
 			<span id="statistic" class="box">
-				<div class="box">
+				<!-- <div class="box">
 					<ring-loader
 						:loading="loading_statChart"
 						color="#FFFFFF"
@@ -87,7 +87,7 @@
 						ref="statChart"
 						class="chart"
 					></canvas>
-				</div>
+				</div> -->
 				<div class="box">
 					<ring-loader
 						:loading="loading_cpuChart"
@@ -160,10 +160,10 @@ export default class Dashboard extends Vue {
 		Helper.get('/members').then(data => {
 			for (const member of data) {
 				if (member.online) {
-					member.status = 'Online'
+					member.status = 'ONLINE'
 					member.datetime = member.onlineFor ? `${this.fullDurationString(member.onlineFor)}` : 'invalid time format'
 				} else {
-					member.status = 'Last seen'
+					member.status = 'Last seen: '
 					member.datetime = member.lastseen ? `${moment(member.lastseen).fromNow()}` : 'invalid date format'
 					console.log(member.lastseen)
 				}
@@ -334,7 +334,7 @@ export default class Dashboard extends Vue {
 <style lang="scss" scoped>
 .dashboard {
 	// background-color: rgba(19, 40, 59, 0.856);
-	background-color: #151719f3;
+	background-color: hsl(210, 0%, 14%);
 }
 
 #container {
@@ -353,7 +353,7 @@ export default class Dashboard extends Vue {
 #leftbox {
 	display: block;
 	flex-direction: column;
-	background-color: #333536c5;
+	background-color: hsla(210, 3%, 21%, 0.773);
 	box-shadow: 0px 0px 10px #000000;
 	// width: 100%;
 	width: 50%;
@@ -368,7 +368,7 @@ export default class Dashboard extends Vue {
 	height: 2rem;
 	color: #00ccff;
 	font-family: Raleway;
-	background-color: rgba(95, 97, 100, 0.397);
+	background-color: hsla(210, 3%, 38%, 0.397);
 	box-shadow: 0px 0px 3px #000000;
 }
 
@@ -402,14 +402,15 @@ export default class Dashboard extends Vue {
 	text-align: left;
 
 	// box-shadow: 0px 0px 6px rgba(179, 179, 179, 0.493);
-	box-shadow: 0px 0px 10px rgb(31, 31, 31);
+	box-shadow: 0px 0px 10px hsl(0, 0%, 12%);
 	// border: #494949;
-	background: rgb(65, 65, 65);
-	color: rgb(47, 153, 209);
+	background: hsl(240, 0%, 28%);
+	color: hsl(201, 64%, 50%);
 
 	#lefter {
 		display: flex;
 		flex-direction: row;
+		// margin-right: 10px;
 		div {
 			margin: 6px;
 		}
@@ -434,21 +435,30 @@ export default class Dashboard extends Vue {
 
 	#righter {
 		display: flex;
-		flex-direction: column;
-		justify-content: space-around;
-		align-items: flex-end;
+		flex-direction: row;
+		justify-content: flex-start;
+		align-items: flex-start;
+
+		margin: 6px;
 
 		color: #353535;
-		font-family: Quicksand;
+		font-family: Raleway;
+
+		p {
+			font-size: 0.9rem;
+		}
 
 		#m_status {
-			color: rgb(133, 133, 133);
-			font-weight: bold;
+			color: rgb(175, 175, 175);
+			margin-right: 5px;
+
+			// font-weight: bold;
 		}
 
 		#m_datetime {
 			color: rgb(182, 182, 182);
-			font-size: 0.8rem;
+			// font-size: 0.8rem;
+			font-weight: bold;
 		}
 	}
 }

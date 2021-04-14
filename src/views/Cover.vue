@@ -10,7 +10,7 @@
 	>
 		<div id="box">
 			<h1 id="logo">MINESIN</h1>
-			<h1>Welcome to my web dashboard, my friends.</h1>
+			<h1>Welcome, my friends.</h1>
 			<form action="" @submit="authenticate">
 				<input
 					type="password"
@@ -115,6 +115,7 @@ export default class Cover extends Vue {
 }
 #error-text {
 	margin: 1rem;
+	text-shadow: 1px 1px 0px black;
 	color: rgb(255, 106, 106);
 }
 
@@ -137,17 +138,27 @@ $imgnum: var(--img-num);
 }
 
 #box {
+	background-color: rgba(107, 107, 107, 0.377);
+	padding: 50px;
+	border-radius: 10px;
+	// backdrop-filter: blur(2px);
+	backdrop-filter: blur(10px);
+	// backdrop-filter: brightness(60%);
+
 	#logo {
 		font-family: "MinecraftBig", Raleway;
 		font-size: 4rem;
 		font-weight: 100;
-		color: antiquewhite;
+		text-shadow: 5px 5px 0px black;
+		color: hsl(33, 100%, 86%);
 	}
 	h1 {
-		font-family: "Raleway", Times, serif;
+		font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+			"Lucida Sans", Arial, sans-serif, "Arial Narrow", Arial, sans-serif;
 		font-size: 2rem;
+		text-shadow: 2px 3px 0px black;
 		color: white;
-		margin-bottom: 100px;
+		margin-bottom: 50px;
 	}
 }
 
@@ -162,6 +173,7 @@ $imgnum: var(--img-num);
 	width: 12.5rem;
 	height: 3.125rem;
 
+	box-shadow: 0px 0px 10px hsl(147, 68%, 20%);
 	border: 1px solid rgb(42, 214, 119);
 	border-radius: 10px;
 

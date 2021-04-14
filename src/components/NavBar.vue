@@ -42,8 +42,8 @@ export default class NavBar extends Vue {
 <style scoped lang="scss">
 #container {
 	// padding: 30px;
-	background-color: rgb(21, 24, 29);
-	border-bottom: 1px solid rgba(128, 128, 128, 0.555);
+	background-color: hsl(210, 13%, 9%);
+	border-bottom: 2px solid rgba(128, 128, 128, 0.555);
 	position: relative;
 	// width: 100vw;
 	// margin-bottom: 20px;
@@ -52,7 +52,7 @@ export default class NavBar extends Vue {
 	// flex: 0 0 20rem;
 	justify-content: center;
 	align-items: center;
-	box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.5);
+	// box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.5);
 
 	// .logo {
 	// 	padding-top: 2.5rem;
