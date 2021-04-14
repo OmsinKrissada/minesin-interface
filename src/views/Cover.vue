@@ -153,9 +153,11 @@ $imgnum: var(--img-num);
 		color: hsl(33, 100%, 86%);
 	}
 	h1 {
-		font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-			"Lucida Sans", Arial, sans-serif, "Arial Narrow", Arial, sans-serif;
-		font-size: 2rem;
+		font-family: "Minecraftia", "Trebuchet MS", "Lucida Sans Unicode",
+			"Lucida Grande", "Lucida Sans", Arial, sans-serif, "Arial Narrow",
+			Arial, sans-serif;
+		font-size: 1.5rem;
+		font-weight: 100;
 		text-shadow: 2px 3px 0px black;
 		color: white;
 		margin-bottom: 50px;

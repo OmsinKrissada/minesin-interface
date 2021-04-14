@@ -2,8 +2,8 @@
 	<div class="dashboard">
 		<div id="container">
 			<span id="leftbox" class="box">
-				<h3 class="label">Members</h3>
-				<ul class="memberbox">
+				<h2 class="label">Members</h2>
+				<div class="memberbox">
 					<ring-loader
 						:loading="loading_member"
 						color="#FFFFFF"
@@ -12,11 +12,14 @@
 					<p v-if="error" style="color: #ff0000aa">
 						Error loading list, try relog
 					</p>
+					<h3 class="status-header" v-if="online_members.length > 0">
+						🟢 Online
+					</h3>
 					<transition-group name="list" tag="p">
-						<li
-							v-for="member in members"
+						<span
+							v-for="member in online_members"
 							:key="member"
-							class="box memberitem"
+							class="box memberitem onlinemem"
 						>
 							<span id="lefter">
 								<img
@@ -32,27 +35,22 @@
 								</div>
 							</span>
 							<span id="righter">
-								<p id="m_status">{{ member.status }}</p>
-								<p id="m_datetime">{{ member.datetime }}</p>
+								<div>
+									<p id="m_status">Online for</p>
+									<p id="m_datetime">{{ member.datetime }}</p>
+								</div>
+								<p id="m_location">{{ member.location }}</p>
 							</span>
-						</li>
+						</span>
 					</transition-group>
-				</ul>
-				<ul class="memberbox">
-					<ring-loader
-						:loading="loading_member"
-						color="#FFFFFF"
-						id="member-loader"
-					></ring-loader>
-					<p v-if="neterror" style="color: #ff0000aa">
-						Error loading list, please check your internet
-						connection.
-					</p>
+					<h2 class="status-header" v-if="offline_members.length > 0">
+						⚫ Offline
+					</h2>
 					<transition-group name="list" tag="p">
-						<li
-							v-for="member in members"
+						<span
+							v-for="member in offline_members"
 							:key="member"
-							class="box memberitem"
+							class="box memberitem offlinemem"
 						>
 							<span id="lefter">
 								<img
@@ -68,12 +66,14 @@
 								</div>
 							</span>
 							<span id="righter">
-								<p id="m_status">{{ member.status }}</p>
-								<p id="m_datetime">{{ member.datetime }}</p>
+								<div>
+									<p id="m_status">Last seen</p>
+									<p id="m_datetime">{{ member.datetime }}</p>
+								</div>
 							</span>
-						</li>
+						</span>
 					</transition-group>
-				</ul>
+				</div>
 			</span>
 			<span id="statistic" class="box">
 				<!-- <div class="box">
@@ -140,7 +140,8 @@ export default class Dashboard extends Vue {
 	loading_memChart = true;
 	loading_statChart = true;
 
-	members: any = [];
+	online_members: any[] = [];
+	offline_members: any[] = [];
 	neterror = false;
 
 	fullDurationString(duration: moment.Duration) {
@@ -149,10 +150,11 @@ export default class Dashboard extends Vue {
 		const hours = duration.hours();
 		const mins = duration.minutes();
 		const secs = duration.seconds();
-		if (days) str += `${days} day${days > 1 ? 's' : ''} `;
-		if (hours) str += `${hours} hour${hours > 1 ? 's' : ''} `;
-		if (mins) str += `${mins} minute${mins > 1 ? 's' : ''} `;
-		if (secs) str += `${secs} second${secs > 1 ? 's' : ''}`;
+		if (days) str += `${days} d${days > 1 ? 's' : ''} `;
+		if (hours) str += `${hours} hr${hours > 1 ? 's' : ''} `;
+		if (mins) str += `${mins} min${mins > 1 ? 's' : ''} `;
+		if (secs) str += `${secs} sec${secs > 1 ? 's' : ''}`;
+		return str;
 	}
 
 
@@ -160,14 +162,13 @@ export default class Dashboard extends Vue {
 		Helper.get('/members').then(data => {
 			for (const member of data) {
 				if (member.online) {
-					member.status = 'ONLINE'
-					member.datetime = member.onlineFor ? `${this.fullDurationString(member.onlineFor)}` : 'invalid time format'
+					member.datetime = member.onlineFor ? `${this.fullDurationString(moment.duration(member.onlineFor, 'ms'))}` : 'invalid time format'
+					this.online_members.push(member);
 				} else {
-					member.status = 'Last seen: '
 					member.datetime = member.lastseen ? `${moment(member.lastseen).fromNow()}` : 'invalid date format'
-					console.log(member.lastseen)
+					this.offline_members.push(member);
+
 				}
-				this.members.push(member);
 			}
 		}).catch((err: AxiosError) => {
 			if (err.message) {
@@ -390,6 +391,15 @@ export default class Dashboard extends Vue {
 	}
 }
 
+.status-header {
+	margin: 10px;
+	margin-left: 25px;
+	color: hsl(0, 0%, 50%);
+
+	font-size: 1.5rem;
+	align-self: flex-start;
+}
+
 .memberitem {
 	display: flex;
 	flex-direction: row;
@@ -423,6 +433,7 @@ export default class Dashboard extends Vue {
 		#m_ign {
 			font-size: 1.25rem;
 			font-family: Raleway;
+			text-shadow: 0px 0px 2px black;
 		}
 		#m_uuid {
 			// color: rgb(112, 112, 112);
@@ -435,30 +446,45 @@ export default class Dashboard extends Vue {
 
 	#righter {
 		display: flex;
-		flex-direction: row;
-		justify-content: flex-start;
-		align-items: flex-start;
+		flex-direction: column;
+		justify-content: space-between;
+		align-items: flex-end;
 
 		margin: 6px;
 
 		color: #353535;
-		font-family: Raleway;
+		font-family: Montserrat;
+
+		div {
+			display: flex;
+			flex-direction: row;
+			justify-content: flex-start;
+			align-items: flex-start;
+		}
 
 		p {
 			font-size: 0.9rem;
 		}
 
 		#m_status {
-			color: rgb(175, 175, 175);
+			color: hsl(0, 0%, 55%);
 			margin-right: 5px;
 
-			// font-weight: bold;
+			font-weight: bold;
 		}
 
 		#m_datetime {
-			color: rgb(182, 182, 182);
+			color: hsl(0, 0%, 85%);
 			// font-size: 0.8rem;
 			font-weight: bold;
+			text-shadow: 0px 0px 2px black;
+		}
+
+		#m_location {
+			color: hsl(165, 86%, 42%);
+			text-transform: uppercase;
+			font-weight: bold;
+			text-shadow: 0px 0px 2px black;
 		}
 	}
 }
@@ -477,6 +503,7 @@ export default class Dashboard extends Vue {
 		justify-content: center;
 		align-items: center;
 		background-color: #333536c5;
+		box-shadow: 0px 0px 10px #000000;
 		// width: 100%;
 		width: 312px;
 		height: auto;
