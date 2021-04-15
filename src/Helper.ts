@@ -6,7 +6,6 @@ export const authHeader = { headers: { Authorization: `Bearer ${localStorage.acc
 
 export async function get(apipath: string) {
 	if (localStorage.getItem('accessToken') == undefined) return;
-	console.log('token', localStorage.accessToken)
 	try {
 		console.log('sending request')
 		return (await axios.get(`${endpoint}${apipath}`, { headers: { Authorization: `Bearer ${localStorage.accessToken}` } })).data;
