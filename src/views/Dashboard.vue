@@ -12,9 +12,9 @@
 					<p v-if="error" style="color: #ff0000aa">
 						Error loading list, try relog
 					</p>
-					<h3 class="status-header" v-if="online_members.length > 0">
+					<!-- <h3 class="status-header" v-if="online_members.length > 0">
 						🟢 Online
-					</h3>
+					</h3> -->
 					<transition-group name="list" tag="p">
 						<span
 							v-for="member in online_members"
@@ -43,9 +43,9 @@
 							</span>
 						</span>
 					</transition-group>
-					<h2 class="status-header" v-if="offline_members.length > 0">
+					<!-- <h2 class="status-header" v-if="offline_members.length > 0">
 						⚫ Offline
-					</h2>
+					</h2> -->
 					<transition-group name="list" tag="p">
 						<span
 							v-for="member in offline_members"
@@ -70,6 +70,7 @@
 									<p id="m_status">Last seen</p>
 									<p id="m_datetime">{{ member.datetime }}</p>
 								</div>
+								<p id="m_location">{{ member.location }}</p>
 							</span>
 						</span>
 					</transition-group>
@@ -162,10 +163,14 @@ export default class Dashboard extends Vue {
 		Helper.get('/members').then(data => {
 			for (const member of data) {
 				if (member.online) {
+					// member.ign = '🟢 ' + member.ign;
 					member.datetime = member.onlineFor ? `${this.fullDurationString(moment.duration(member.onlineFor, 'ms'))}` : 'invalid time format'
+					member.location = member.location + ' 🟢'
 					this.online_members.push(member);
 				} else {
+					// member.ign = '⚫ ' + member.ign;
 					member.datetime = member.lastseen ? `${moment(member.lastseen).fromNow()}` : 'invalid date format'
+					member.location = '⚫'
 					this.offline_members.push(member);
 
 				}
