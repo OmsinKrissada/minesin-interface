@@ -89,6 +89,7 @@ body::-webkit-scrollbar {
 
 	border: 1.5px rgba(0, 0, 0, 0.2) solid;
 	border-radius: 5px;
+	outline: none;
 
 	transition: 0.25s;
 }

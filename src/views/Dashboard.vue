@@ -2,7 +2,17 @@
 	<div class="dashboard">
 		<div id="container">
 			<span id="leftbox" class="box">
-				<h2 class="label">Members</h2>
+				<span id="labelbox">
+					<h2>Members</h2>
+					<button
+						id="live"
+						class="box button"
+						:class="doLive ? '' : 'greyscale'"
+						v-on:click="toggleLive"
+					>
+						LIVE
+					</button>
+				</span>
 				<div class="memberbox">
 					<ring-loader
 						:loading="loading_member"
@@ -140,6 +150,7 @@ export default class Dashboard extends Vue {
 
 	online_members: any[] = [];
 	offline_members: any[] = [];
+	doLive = true;
 	member_interval: number | undefined;
 	neterror = false;
 
@@ -156,43 +167,62 @@ export default class Dashboard extends Vue {
 		return str;
 	}
 
+	toggleLive() {
+		if (this.doLive) {
+			clearInterval(this.member_interval)
+			this.doLive = false;
+			sessionStorage.setItem('live_member', '0');
+		} else {
+			this.member_interval = setInterval(this.getMember, 1000);
+			this.doLive = true;
+			sessionStorage.setItem('live_member', '1');
+		}
+	}
+
 
 	unmounted() {
 		clearInterval(this.member_interval);
 	}
 
-	mounted() {
-		const getMember = () => {
-			Helper.get('/members').then(data => {
-				const onlines = [];
-				const offlines = [];
-				for (const member of data) {
-					if (member.online) {
-						// member.ign = '🟢 ' + member.ign;
-						member.datetime = member.onlineFor ? `${this.fullDurationString(moment.duration(member.onlineFor, 'ms'))}` : 'invalid time format'
-						member.location = (member.location ?? '') + ' 🟢'
-						onlines.push(member);
-					} else {
-						// member.ign = '⚫ ' + member.ign;
-						member.datetime = member.lastseen ? `${moment(member.lastseen).fromNow()}` : 'invalid date format'
-						member.location = '⚫'
-						offlines.push(member);
+	getMember() {
+		Helper.get('/members').then(data => {
+			const onlines = [];
+			const offlines = [];
+			for (const member of data) {
+				if (member.online) {
+					// member.ign = '🟢 ' + member.ign;
+					member.datetime = member.onlineFor ? `${this.fullDurationString(moment.duration(member.onlineFor, 'ms'))}` : 'invalid time format'
+					member.location = (member.location ?? '') + ' 🟢'
+					onlines.push(member);
+				} else {
+					// member.ign = '⚫ ' + member.ign;
+					member.datetime = member.lastseen ? `${moment(member.lastseen).fromNow()}` : 'invalid date format'
+					member.location = '⚫'
+					offlines.push(member);
 
-					}
 				}
-				onlines.sort();
-				offlines.sort((a, b) => moment(b.lastseen).valueOf() - moment(a.lastseen).valueOf());
-				this.online_members = onlines;
-				this.offline_members = offlines;
-			}).catch((err: AxiosError) => {
-				if (err.message) {
-					console.error(err.message)
-					this.neterror = true;
-				}
-			}).finally(() => this.loading_member = false)
+			}
+			onlines.sort();
+			offlines.sort((a, b) => moment(b.lastseen).valueOf() - moment(a.lastseen).valueOf());
+			this.online_members = onlines;
+			this.offline_members = offlines;
+		}).catch((err: AxiosError) => {
+			if (err.message) {
+				console.error(err.message)
+				this.neterror = true;
+			}
+		}).finally(() => this.loading_member = false)
+	}
+
+	mounted() {
+		if (sessionStorage.getItem('live_member')) {
+			if (sessionStorage.getItem('live_member') == '1') this.doLive = true;
+			else this.doLive = false;
 		}
-		getMember();
-		this.member_interval = setInterval(getMember, 1000);
+
+
+		this.getMember();
+		if (this.doLive) this.member_interval = setInterval(this.getMember, 1000);
 		// axios.get(endpoint + '/members', { headers: { Authorization: `Bearer ${localStorage.accessToken}` } }).then(res => {
 		// 	for (const member of res.data) {
 		// 		if (member.online) {
@@ -375,17 +405,46 @@ export default class Dashboard extends Vue {
 	// width: 50%;
 }
 
-.label {
-	text-align: left;
-	font-size: 1.5rem;
+#labelbox {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+
 	border-radius: 10px;
 	padding: 15px;
 	width: auto;
 	height: 2rem;
-	color: #00ccff;
-	font-family: Raleway;
 	background-color: hsla(210, 3%, 38%, 0.397);
 	box-shadow: 0px 0px 3px #000000;
+
+	h2 {
+		color: #00ccff;
+		font-family: Raleway;
+		font-size: 1.5rem;
+	}
+}
+
+.greyscale {
+	filter: grayscale(3);
+}
+
+#live {
+	color: rgb(255, 191, 191);
+	height: 1.2rem;
+	padding: 0px 10px 0px 10px;
+	margin-left: 10px;
+	background-color: rgba(255, 0, 0, 0.178);
+	border: 1px solid red;
+	border-radius: 100px;
+	font-family: system-ui;
+	font-size: 0.8rem;
+	text-align: center;
+	line-height: 0px;
+
+	&:hover {
+		color: white;
+		background-color: rgba(255, 0, 0, 0.616);
+	}
 }
 
 .box {
