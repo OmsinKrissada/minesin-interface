@@ -45,9 +45,13 @@ export default class App extends Vue {
 	src: url("assets/fonts/Minecraftia.ttf") format("truetype");
 }
 
+:root {
+	font-size: 20px;
+	/* font-size: 2vmin; */
+}
+
 * {
 	margin: 0;
-	font-size: 20px;
 }
 
 body {
@@ -65,8 +69,8 @@ body::-webkit-scrollbar {
 	flex-direction: column;
 	justify-content: flex-start;
 	font-family: Avenir, Helvetica, Arial, sans-serif;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
+	/* -webkit-font-smoothing: antialiased; */
+	/* -moz-osx-font-smoothing: grayscale; */
 	text-align: center;
 	color: #2c3e50;
 }
@@ -95,7 +99,7 @@ body::-webkit-scrollbar {
 	background-color: grey; */
 	width: 100%;
 	flex-grow: 1;
-	margin: 0rem;
+	margin: 0;
 }
 
 .fade-enter-active,

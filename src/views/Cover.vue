@@ -59,7 +59,7 @@ export default class Cover extends Vue {
 	image = '';
 
 	mounted() {
-		this.image = require(`@/assets/bg/${Math.ceil(Math.random() * 21)}.png`);
+		this.image = require(`@/assets/bg/${Math.ceil(Math.random() * 21)}.jpg`);
 	}
 
 	authenticate(e: any) {
@@ -99,8 +99,10 @@ export default class Cover extends Vue {
 
 <style lang="scss" scoped>
 .field {
-	margin: 20px;
+	margin: 20px 0 20px 0;
 	padding: 0 10px 0 10px;
+	height: 2rem;
+	max-width: 60vmin;
 
 	appearance: none;
 	border: none;
@@ -109,7 +111,6 @@ export default class Cover extends Vue {
 	background: rgba(0, 0, 0, 0.3);
 	border: 1px solid grey;
 	border-radius: 8px;
-	height: 2rem;
 	font-size: 1rem;
 	color: white;
 }
@@ -138,16 +139,20 @@ $imgnum: var(--img-num);
 }
 
 #box {
+	// position: relat;
 	background-color: rgba(107, 107, 107, 0.377);
-	padding: 50px;
+	padding: 5vmin;
+	margin: 20px;
+	max-width: 80vmin;
+
+	// width: clamp(200px, 50%, 600px);
+
 	border-radius: 10px;
-	// backdrop-filter: blur(2px);
 	backdrop-filter: blur(10px);
-	// backdrop-filter: brightness(60%);
 
 	#logo {
 		font-family: "MinecraftBig", Raleway;
-		font-size: 4rem;
+		font-size: clamp(0px, 4rem, 17vmin);
 		font-weight: 100;
 		text-shadow: 5px 5px 0px black;
 		color: hsl(33, 100%, 86%);
@@ -156,7 +161,7 @@ $imgnum: var(--img-num);
 		font-family: "Minecraftia", "Trebuchet MS", "Lucida Sans Unicode",
 			"Lucida Grande", "Lucida Sans", Arial, sans-serif, "Arial Narrow",
 			Arial, sans-serif;
-		font-size: 1.5rem;
+		font-size: clamp(0px, 1.5rem, 6vmin);
 		font-weight: 100;
 		text-shadow: 2px 3px 0px black;
 		color: white;
@@ -173,6 +178,7 @@ $imgnum: var(--img-num);
 
 	margin: auto;
 	width: 12.5rem;
+	max-width: 70vmin;
 	height: 3.125rem;
 
 	box-shadow: 0px 0px 10px hsl(147, 68%, 20%);

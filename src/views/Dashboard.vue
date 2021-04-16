@@ -420,7 +420,7 @@ export default class Dashboard extends Vue {
 	box-shadow: 0px 0px 10px hsl(0, 0%, 12%);
 	// border: #494949;
 	background: hsl(240, 0%, 28%);
-	color: hsl(201, 64%, 50%);
+	color: hsl(201, 69%, 53%);
 
 	#lefter {
 		display: flex;
@@ -438,7 +438,7 @@ export default class Dashboard extends Vue {
 		#m_ign {
 			font-size: 1.25rem;
 			font-family: Raleway;
-			text-shadow: 0px 0px 2px black;
+			// text-shadow: 0px 0px 2px black;
 		}
 		#m_uuid {
 			// color: rgb(112, 112, 112);
@@ -482,7 +482,7 @@ export default class Dashboard extends Vue {
 			color: hsl(0, 0%, 85%);
 			// font-size: 0.8rem;
 			font-weight: bold;
-			text-shadow: 0px 0px 2px black;
+			// text-shadow: 0px 0px 2px black;
 		}
 
 		#m_location {
