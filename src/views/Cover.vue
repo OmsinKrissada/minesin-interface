@@ -152,7 +152,8 @@ $imgnum: var(--img-num);
 
 	#logo {
 		font-family: "MinecraftBig", Raleway;
-		font-size: clamp(0px, 4rem, 17vmin);
+		font-size: 4rem;
+		// font-size: clamp(0px, 4rem, 17vmin);
 		font-weight: 100;
 		text-shadow: 5px 5px 0px black;
 		color: hsl(33, 100%, 86%);
@@ -161,7 +162,8 @@ $imgnum: var(--img-num);
 		font-family: "Minecraftia", "Trebuchet MS", "Lucida Sans Unicode",
 			"Lucida Grande", "Lucida Sans", Arial, sans-serif, "Arial Narrow",
 			Arial, sans-serif;
-		font-size: clamp(0px, 1.5rem, 6vmin);
+		font-size: 1.5rem;
+		// font-size: clamp(0px, 1.5rem, 6vmin);
 		font-weight: 100;
 		text-shadow: 2px 3px 0px black;
 		color: white;
