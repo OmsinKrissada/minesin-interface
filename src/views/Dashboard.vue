@@ -8,8 +8,9 @@
 						:loading="loading_member"
 						color="#FFFFFF"
 						id="member-loader"
+						style="margin: auto"
 					></ring-loader>
-					<p v-if="error" style="color: #ff0000aa">
+					<p v-if="error" style="color: #ff0000aa; margin: auto">
 						Error loading list, try relog
 					</p>
 					<!-- <h3 class="status-header" v-if="online_members.length > 0">
@@ -357,8 +358,6 @@ export default class Dashboard extends Vue {
 }
 
 #leftbox {
-	display: block;
-	flex-direction: column;
 	background-color: hsla(210, 3%, 21%, 0.773);
 	box-shadow: 0px 0px 10px #000000;
 	// width: 100%;
@@ -384,10 +383,14 @@ export default class Dashboard extends Vue {
 
 .memberbox {
 	display: flex;
-	padding: 0%;
 	flex-direction: column;
 	justify-content: space-evenly;
-	align-items: center;
+	align-items: stretch;
+
+	padding: 0%;
+	margin: auto;
+
+	width: 700px;
 
 	// background-color: antiquewhite;
 
