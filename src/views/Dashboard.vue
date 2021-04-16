@@ -13,10 +13,7 @@
 					<p v-if="error" style="color: #ff0000aa; margin: auto">
 						Error loading list, try relog
 					</p>
-					<!-- <h3 class="status-header" v-if="online_members.length > 0">
-						🟢 Online
-					</h3> -->
-					<transition-group name="list" tag="p">
+					<div name="" tag="p">
 						<span
 							v-for="member in online_members"
 							:key="member"
@@ -37,17 +34,16 @@
 							</span>
 							<span id="righter">
 								<div>
-									<p id="m_status">Online for</p>
+									<p id="m_status" v-if="member.datetime">
+										Online for
+									</p>
 									<p id="m_datetime">{{ member.datetime }}</p>
 								</div>
 								<p id="m_location">{{ member.location }}</p>
 							</span>
 						</span>
-					</transition-group>
-					<!-- <h2 class="status-header" v-if="offline_members.length > 0">
-						⚫ Offline
-					</h2> -->
-					<transition-group name="list" tag="p">
+					</div>
+					<div name="" tag="p">
 						<span
 							v-for="member in offline_members"
 							:key="member"
@@ -74,7 +70,7 @@
 								<p id="m_location">{{ member.location }}</p>
 							</span>
 						</span>
-					</transition-group>
+					</div>
 				</div>
 			</span>
 			<span id="statistic" class="box">
@@ -144,6 +140,7 @@ export default class Dashboard extends Vue {
 
 	online_members: any[] = [];
 	offline_members: any[] = [];
+	member_interval: number | undefined;
 	neterror = false;
 
 	fullDurationString(duration: moment.Duration) {
@@ -160,28 +157,42 @@ export default class Dashboard extends Vue {
 	}
 
 
-	mounted() {
-		Helper.get('/members').then(data => {
-			for (const member of data) {
-				if (member.online) {
-					// member.ign = '🟢 ' + member.ign;
-					member.datetime = member.onlineFor ? `${this.fullDurationString(moment.duration(member.onlineFor, 'ms'))}` : 'invalid time format'
-					member.location = member.location + ' 🟢'
-					this.online_members.push(member);
-				} else {
-					// member.ign = '⚫ ' + member.ign;
-					member.datetime = member.lastseen ? `${moment(member.lastseen).fromNow()}` : 'invalid date format'
-					member.location = '⚫'
-					this.offline_members.push(member);
+	unmounted() {
+		clearInterval(this.member_interval);
+	}
 
+	mounted() {
+		const getMember = () => {
+			Helper.get('/members').then(data => {
+				const onlines = [];
+				const offlines = [];
+				for (const member of data) {
+					if (member.online) {
+						// member.ign = '🟢 ' + member.ign;
+						member.datetime = member.onlineFor ? `${this.fullDurationString(moment.duration(member.onlineFor, 'ms'))}` : 'invalid time format'
+						member.location = (member.location ?? '') + ' 🟢'
+						onlines.push(member);
+					} else {
+						// member.ign = '⚫ ' + member.ign;
+						member.datetime = member.lastseen ? `${moment(member.lastseen).fromNow()}` : 'invalid date format'
+						member.location = '⚫'
+						offlines.push(member);
+
+					}
 				}
-			}
-		}).catch((err: AxiosError) => {
-			if (err.message) {
-				console.error(err.message)
-				this.neterror = true;
-			}
-		}).finally(() => this.loading_member = false)
+				onlines.sort();
+				offlines.sort((a, b) => moment(b.lastseen).valueOf() - moment(a.lastseen).valueOf());
+				this.online_members = onlines;
+				this.offline_members = offlines;
+			}).catch((err: AxiosError) => {
+				if (err.message) {
+					console.error(err.message)
+					this.neterror = true;
+				}
+			}).finally(() => this.loading_member = false)
+		}
+		getMember();
+		this.member_interval = setInterval(getMember, 1000);
 		// axios.get(endpoint + '/members', { headers: { Authorization: `Bearer ${localStorage.accessToken}` } }).then(res => {
 		// 	for (const member of res.data) {
 		// 		if (member.online) {
@@ -334,7 +345,6 @@ export default class Dashboard extends Vue {
 			});
 		})
 	}
-
 }
 </script>
 
@@ -347,6 +357,7 @@ export default class Dashboard extends Vue {
 #container {
 	height: auto;
 	display: flex;
+	flex-wrap: wrap;
 	padding-top: 50px;
 	// margin-right: 15rem;
 	// margin-left: 15rem;
@@ -361,7 +372,7 @@ export default class Dashboard extends Vue {
 	background-color: hsla(210, 3%, 21%, 0.773);
 	box-shadow: 0px 0px 10px #000000;
 	// width: 100%;
-	width: 50%;
+	// width: 50%;
 }
 
 .label {
@@ -391,6 +402,7 @@ export default class Dashboard extends Vue {
 	margin: auto;
 
 	width: 700px;
+	// max-width: 90vmin;
 
 	// background-color: antiquewhite;
 
@@ -421,6 +433,7 @@ export default class Dashboard extends Vue {
 
 	// box-shadow: 0px 0px 6px rgba(179, 179, 179, 0.493);
 	box-shadow: 0px 0px 10px hsl(0, 0%, 12%);
+	border: 2px solid hsl(0, 0%, 40%);
 	// border: #494949;
 	background: hsl(240, 0%, 28%);
 	color: hsl(201, 69%, 53%);
