@@ -160,10 +160,10 @@ export default class Dashboard extends Vue {
 		const hours = duration.hours();
 		const mins = duration.minutes();
 		const secs = duration.seconds();
-		if (days) str += `${days} d${days > 1 ? 's' : ''} `;
-		if (hours) str += `${hours} hr${hours > 1 ? 's' : ''} `;
-		if (mins) str += `${mins} min${mins > 1 ? 's' : ''} `;
-		if (secs) str += `${secs} sec${secs > 1 ? 's' : ''}`;
+		if (days) str += `${days}d `;
+		if (hours) str += `${hours}h `;
+		if (mins) str += `${mins}m `;
+		if (secs) str += `${secs}s`;
 		return str;
 	}
 
