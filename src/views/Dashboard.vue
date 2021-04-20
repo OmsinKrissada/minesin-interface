@@ -202,7 +202,7 @@ export default class Dashboard extends Vue {
 
 				}
 			}
-			onlines.sort();
+			onlines.sort((a, b) => b.onlineFor - a.onlineFor);
 			offlines.sort((a, b) => moment(b.lastseen).valueOf() - moment(a.lastseen).valueOf());
 			this.online_members = onlines;
 			this.offline_members = offlines;
