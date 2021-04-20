@@ -105,5 +105,14 @@ export default class NavBar extends Vue {
 		background-color: #75161e;
 		color: white;
 	}
+
+	@media only screen and (max-width: 768px) {
+		.link {
+			margin: 5px;
+			p {
+				font-size: 0.9rem;
+			}
+		}
+	}
 }
 </style>

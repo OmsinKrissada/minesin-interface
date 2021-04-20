@@ -13,7 +13,7 @@
 						LIVE
 					</button>
 				</span>
-				<div class="memberbox">
+				<div class="member-box">
 					<ring-loader
 						:loading="loading_member"
 						color="#FFFFFF"
@@ -27,7 +27,7 @@
 						<span
 							v-for="member in online_members"
 							:key="member"
-							class="box memberitem onlinemem"
+							class="box member-item onlinemem"
 						>
 							<span id="lefter">
 								<img
@@ -57,7 +57,7 @@
 						<span
 							v-for="member in offline_members"
 							:key="member"
-							class="box memberitem offlinemem"
+							class="box member-item offlinemem"
 						>
 							<span id="lefter">
 								<img
@@ -387,7 +387,6 @@ export default class Dashboard extends Vue {
 #container {
 	height: auto;
 	display: flex;
-	flex-wrap: wrap;
 	padding-top: 50px;
 	// margin-right: 15rem;
 	// margin-left: 15rem;
@@ -401,6 +400,7 @@ export default class Dashboard extends Vue {
 #leftbox {
 	background-color: hsla(210, 3%, 21%, 0.773);
 	box-shadow: 0px 0px 10px #000000;
+	margin: 0px 5px 20px 5px;
 	// width: 100%;
 	// width: 50%;
 }
@@ -451,14 +451,11 @@ export default class Dashboard extends Vue {
 	border-radius: 10px;
 }
 
-.memberbox {
+.member-box {
 	display: flex;
 	flex-direction: column;
 	justify-content: space-evenly;
 	align-items: stretch;
-
-	padding: 0%;
-	margin: auto;
 
 	width: 700px;
 	// max-width: 90vmin;
@@ -479,7 +476,7 @@ export default class Dashboard extends Vue {
 	align-self: flex-start;
 }
 
-.memberitem {
+.member-item {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
@@ -499,7 +496,7 @@ export default class Dashboard extends Vue {
 
 	#lefter {
 		display: flex;
-		flex-direction: row;
+		align-items: center;
 		// margin-right: 10px;
 		div {
 			margin: 6px;
@@ -512,7 +509,8 @@ export default class Dashboard extends Vue {
 		}
 		#m_ign {
 			font-size: 1.25rem;
-			font-family: Raleway;
+			font-family: "Open Sans";
+			font-weight: 100;
 			// text-shadow: 0px 0px 2px black;
 		}
 		#m_uuid {
@@ -586,14 +584,44 @@ export default class Dashboard extends Vue {
 		box-shadow: 0px 0px 10px #000000;
 		// width: 100%;
 		width: 312px;
-		height: auto;
-		margin-bottom: 25px;
+		height: 312px;
+		margin: 0px 5px 25px 5px;
+
+		.loader {
+			margin: 0;
+			background-color: transparent;
+			box-shadow: none;
+		}
 	}
 	.chart {
 	}
+}
 
-	.loader {
-		background-color: none;
+@media only screen and (max-width: 768px) {
+	#container {
+		flex-direction: column;
+		align-items: center;
+	}
+	#leftbox {
+		width: 95%;
+	}
+	.member-box {
+		width: 100%;
+	}
+	.member-item {
+		flex-direction: column;
+		justify-content: flex-start;
+		align-items: flex-start;
+		#lefter {
+			flex-wrap: wrap;
+		}
+		#righter {
+			flex-direction: row;
+			justify-content: space-between;
+			flex-wrap: wrap;
+
+			width: 100%;
+		}
 	}
 }
 

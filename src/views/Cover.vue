@@ -9,31 +9,35 @@
 		}"
 	>
 		<div id="box">
-			<h1 id="logo">MINESIN</h1>
-			<h1>Welcome, my friends.</h1>
-			<form action="" @submit="authenticate">
-				<input
-					type="password"
-					class="field"
-					v-model="pass"
-					placeholder="Passphrase"
-					autocomplete="current-password"
-					autofocus
-				/>
-				<button v-if="!sending" id="proceed-button" class="button">
-					<p v-if="!sending">Proceed</p>
-					<!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-					<svg v-if="!sending">
-						<use
-							xlink:href="@/assets/right-arrow.svg#Layer_1"
-						></use>
-					</svg>
-				</button>
-				<pulse-loader :loading="sending"></pulse-loader>
-			</form>
-			<p id="error-text">
-				{{ errortxt }}
-			</p>
+			<div id="head">
+				<h1 id="logo">MINESIN</h1>
+				<h1>Welcome, my friends.</h1>
+			</div>
+			<div id="login">
+				<form action="" @submit="authenticate">
+					<input
+						type="password"
+						id="field"
+						v-model="pass"
+						placeholder="Passphrase"
+						autocomplete="current-password"
+						autofocus
+					/>
+					<button v-if="!sending" id="proceed-button" class="button">
+						<p v-if="!sending">Proceed</p>
+						<!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+						<svg v-if="!sending">
+							<use
+								xlink:href="@/assets/right-arrow.svg#Layer_1"
+							></use>
+						</svg>
+					</button>
+					<pulse-loader :loading="sending"></pulse-loader>
+				</form>
+				<p id="error-text">
+					{{ errortxt }}
+				</p>
+			</div>
 		</div>
 	</div>
 </template>
@@ -98,7 +102,7 @@ export default class Cover extends Vue {
 
 
 <style lang="scss" scoped>
-.field {
+#field {
 	margin: 20px 0 20px 0;
 	padding: 0 10px 0 10px;
 	height: 2rem;
@@ -139,7 +143,11 @@ $imgnum: var(--img-num);
 }
 
 #box {
-	// position: relat;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+
 	background-color: rgba(107, 107, 107, 0.377);
 	padding: 5vmin;
 	margin: 20px;
@@ -167,7 +175,7 @@ $imgnum: var(--img-num);
 		font-weight: 100;
 		text-shadow: 2px 3px 0px black;
 		color: white;
-		margin-bottom: 50px;
+		margin: 0px 0px 50px 0px;
 	}
 }
 
@@ -214,6 +222,39 @@ $imgnum: var(--img-num);
 
 	&:focus {
 		outline: none;
+	}
+}
+
+@media only screen and (max-width: 800px) and (orientation: landscape) {
+	#box {
+		flex-direction: row;
+		padding: 10px 120px 10px 120px;
+		margin: 0;
+		#logo {
+			font-size: 3rem;
+		}
+		h1 {
+			padding: 20px;
+			margin: 0;
+			font-size: 1rem;
+		}
+
+		#login {
+			margin: 25px;
+		}
+
+		#field {
+			height: 1.8rem;
+			font-size: 0.75rem;
+		}
+
+		#proceed-button {
+			width: 10rem;
+			height: 2.5rem;
+			p {
+				font-size: 1.2rem;
+			}
+		}
 	}
 }
 </style>
