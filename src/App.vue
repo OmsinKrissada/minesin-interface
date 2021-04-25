@@ -37,6 +37,7 @@ export default class App extends Vue {
 @import url("https://fonts.googleapis.com/css2?family=Quicksand&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Montserrat&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
+@import url("https://rsms.me/inter/inter.css");
 @font-face {
 	font-family: "MinecraftBig";
 	src: url("assets/fonts/MinecraftBig.ttf") format("truetype");

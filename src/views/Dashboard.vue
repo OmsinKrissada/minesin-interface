@@ -23,7 +23,7 @@
 					<p v-if="error" style="color: #ff0000aa; margin: auto">
 						Error loading list, try relog
 					</p>
-					<div name="" tag="p">
+					<div name="" tag="p" id="online-members-box">
 						<span
 							v-for="member in online_members"
 							:key="member"
@@ -53,6 +53,10 @@
 							</span>
 						</span>
 					</div>
+					<div
+						id="member-border"
+						v-if="online_members.length > 0"
+					></div>
 					<div name="" tag="p">
 						<span
 							v-for="member in offline_members"
@@ -381,7 +385,8 @@ export default class Dashboard extends Vue {
 <style lang="scss" scoped>
 .dashboard {
 	// background-color: rgba(19, 40, 59, 0.856);
-	background-color: hsl(210, 0%, 14%);
+	// background-color: hsl(210, 0%, 14%);
+	background-color: rgb(17, 24, 39);
 }
 
 #container {
@@ -398,8 +403,16 @@ export default class Dashboard extends Vue {
 }
 
 #leftbox {
-	background-color: hsla(210, 3%, 21%, 0.773);
-	box-shadow: 0px 0px 10px #000000;
+	// mine:
+	// background-color: hsla(210, 3%, 21%, 0.773);
+
+	// I copy ideal:
+	// background-color: rgba(255, 255, 255, 0.11);
+
+	// exact from ideal:
+	background-color: rgb(31, 41, 55);
+
+	// box-shadow: 0px 0px 10px #000000;
 	margin: 0px 5px 20px 5px;
 	// width: 100%;
 	// width: 50%;
@@ -411,15 +424,16 @@ export default class Dashboard extends Vue {
 	align-items: center;
 
 	border-radius: 10px;
-	padding: 15px;
+	padding: 20px 20px 10px 20px;
 	width: auto;
 	height: 2rem;
-	background-color: hsla(210, 3%, 38%, 0.397);
-	box-shadow: 0px 0px 3px #000000;
+	// background-color: hsla(210, 3%, 38%, 0.397);
+	// box-shadow: 0px 0px 3px #000000;
 
 	h2 {
-		color: #00ccff;
-		font-family: Raleway;
+		// color: #00ccff;
+		color: white;
+		font-family: Inter;
 		font-size: 1.5rem;
 	}
 }
@@ -467,6 +481,19 @@ export default class Dashboard extends Vue {
 	}
 }
 
+#online-members-box:last-child {
+	border-bottom: 1px solid white;
+	background-color: #00ccff;
+}
+
+#member-border {
+	align-self: center;
+	width: 600px;
+	height: 2px;
+	border-radius: 1px;
+	background-color: #ffffff63;
+}
+
 .status-header {
 	margin: 10px;
 	margin-left: 25px;
@@ -487,12 +514,13 @@ export default class Dashboard extends Vue {
 	list-style: none;
 	text-align: left;
 
-	// box-shadow: 0px 0px 6px rgba(179, 179, 179, 0.493);
-	box-shadow: 0px 0px 10px hsl(0, 0%, 12%);
-	border: 2px solid hsl(0, 0%, 40%);
-	// border: #494949;
-	background: hsl(240, 0%, 28%);
-	color: hsl(201, 69%, 53%);
+	// box-shadow: 0px 0px 10px hsl(0, 0%, 12%);
+	// border: 2px solid hsl(0, 0%, 40%);
+	// background: hsl(240, 0%, 28%);
+	// color: hsl(201, 69%, 53%);
+	color: #00ccff;
+
+	// color: white;
 
 	#lefter {
 		display: flex;
@@ -509,15 +537,16 @@ export default class Dashboard extends Vue {
 		}
 		#m_ign {
 			font-size: 1.25rem;
-			font-family: "Open Sans";
-			font-weight: 100;
+			font-family: "Inter";
+			font-weight: 500;
 			// text-shadow: 0px 0px 2px black;
 		}
 		#m_uuid {
 			// color: rgb(112, 112, 112);
 			color: rgb(110, 110, 110);
 			font-size: 0.8rem;
-			font-family: Quicksand;
+			font-family: "Consolas", "Quicksand", "Courier New", Courier,
+				monospace;
 			font-weight: 500;
 		}
 	}
@@ -531,7 +560,7 @@ export default class Dashboard extends Vue {
 		margin: 6px;
 
 		color: #353535;
-		font-family: Montserrat;
+		font-family: Inter;
 
 		div {
 			display: flex;
@@ -554,7 +583,7 @@ export default class Dashboard extends Vue {
 		#m_datetime {
 			color: hsl(0, 0%, 85%);
 			// font-size: 0.8rem;
-			font-weight: bold;
+			// font-weight: bold;
 			// text-shadow: 0px 0px 2px black;
 		}
 
@@ -580,8 +609,11 @@ export default class Dashboard extends Vue {
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-		background-color: #333536c5;
-		box-shadow: 0px 0px 10px #000000;
+
+		// background-color: #333536c5; // mine
+		background-color: rgb(31, 41, 55); // ideal's
+
+		// box-shadow: 0px 0px 10px #000000;
 		// width: 100%;
 		width: 312px;
 		height: 312px;

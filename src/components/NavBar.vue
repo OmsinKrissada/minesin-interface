@@ -9,6 +9,7 @@
 			</svg> -->
 			<p>Logout</p>
 		</button>
+		<p id="logo">MINESIN</p>
 		<router-link class="link button" to="/dashboard">
 			<p>Dashboard</p>
 		</router-link>
@@ -42,8 +43,9 @@ export default class NavBar extends Vue {
 <style scoped lang="scss">
 #container {
 	// padding: 30px;
-	background-color: hsl(210, 13%, 9%);
-	border-bottom: 2px solid rgba(128, 128, 128, 0.555);
+	// background-color: hsl(210, 13%, 9%); // mine
+	background-color: rgb(17, 24, 39); // ideal's
+	// border-bottom: 2px solid rgba(128, 128, 128, 0.555);
 	position: relative;
 	// width: 100vw;
 	// margin-bottom: 20px;
@@ -72,6 +74,23 @@ export default class NavBar extends Vue {
 	// 	}
 	// }
 
+	#back-btn {
+		margin-right: auto;
+		background-color: #75161e;
+		color: white;
+	}
+
+	#logo {
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -65%);
+
+		color: rgba(255, 255, 255, 0.678);
+		font-size: 45px;
+		font-family: MinecraftBig;
+	}
+
 	.link {
 		// background-color: green;
 		display: inline-block;
@@ -83,7 +102,7 @@ export default class NavBar extends Vue {
 
 		p {
 			padding: 8px;
-			font-family: "Quicksand", sans-serif;
+			font-family: "Quicksand", "Inter", sans-serif;
 			font-size: 1.2rem;
 			font-weight: bold;
 			color: rgb(182, 182, 182);
@@ -98,12 +117,6 @@ export default class NavBar extends Vue {
 			color: white;
 			background-color: #1b487a;
 		}
-	}
-
-	#back-btn {
-		margin-right: auto;
-		background-color: #75161e;
-		color: white;
 	}
 
 	@media only screen and (max-width: 768px) {

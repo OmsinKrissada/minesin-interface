@@ -102,28 +102,6 @@ export default class Cover extends Vue {
 
 
 <style lang="scss" scoped>
-#field {
-	margin: 20px 0 20px 0;
-	padding: 0 10px 0 10px;
-	height: 2rem;
-	max-width: 60vmin;
-
-	appearance: none;
-	border: none;
-	outline: none;
-
-	background: rgba(0, 0, 0, 0.3);
-	border: 1px solid grey;
-	border-radius: 8px;
-	font-size: 1rem;
-	color: white;
-}
-#error-text {
-	margin: 1rem;
-	text-shadow: 1px 1px 0px black;
-	color: rgb(255, 106, 106);
-}
-
 // @function imgnum() {
 // 	@return var(--img-num);
 // }
@@ -179,8 +157,38 @@ $imgnum: var(--img-num);
 	}
 }
 
+#field {
+	margin: 20px 0 20px 0;
+	padding: 0 10px 0 10px;
+	height: 2rem;
+	max-width: 60vmin;
+
+	appearance: none;
+	border: none;
+	outline: none;
+
+	background: rgba(0, 0, 0, 0.3);
+	border: 2px solid grey;
+	border-radius: 8px;
+	font-size: 0.9rem;
+	font-family: Inter;
+	color: rgb(179, 179, 179);
+
+	transition: 0.2s;
+
+	&:focus {
+		border-color: hsl(199, 62%, 45%);
+		box-shadow: 0px 0px 8px hsla(199, 62%, 45%, 0.726);
+		color: white;
+	}
+
+	&:hover {
+		border-color: hsl(199, 62%, 45%);
+	}
+}
+
 #proceed-button {
-	background-color: rgba(42, 214, 119, 0.61);
+	background-color: rgba(42, 192, 109, 0.61);
 
 	display: flex;
 	align-items: center;
@@ -191,7 +199,6 @@ $imgnum: var(--img-num);
 	max-width: 70vmin;
 	height: 3.125rem;
 
-	box-shadow: 0px 0px 10px hsl(147, 68%, 20%);
 	border: 1px solid rgb(42, 214, 119);
 	border-radius: 10px;
 
@@ -200,10 +207,8 @@ $imgnum: var(--img-num);
 
 	p {
 		font-size: 1.5rem;
-		font-family: "Quicksand", sans-serif, monospace;
+		font-family: "Inter", sans-serif, monospace;
 		color: white;
-
-		text-align: center;
 	}
 
 	svg {
@@ -217,12 +222,19 @@ $imgnum: var(--img-num);
 	}
 
 	&:hover {
-		background-color: rgb(38, 189, 106);
+		background-color: rgb(35, 167, 94);
+		box-shadow: 0px 0px 10px hsl(147, 68%, 20%);
 	}
 
 	&:focus {
 		outline: none;
 	}
+}
+
+#error-text {
+	margin: 1rem;
+	text-shadow: 1px 1px 0px black;
+	color: rgb(255, 106, 106);
 }
 
 @media only screen and (max-width: 800px) and (orientation: landscape) {
