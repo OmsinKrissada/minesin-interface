@@ -132,7 +132,7 @@
 				<div class="box">
 					<p>Resources</p>
 					<ring-loader
-						:loading="true"
+						:loading="loading_cpuChart || loading_ramChart"
 						color="#FFFFFF"
 						class="loader"
 					></ring-loader>
@@ -585,9 +585,7 @@ export default class Dashboard extends Vue {
 		.loader {
 			position: absolute;
 			visibility: hidden;
-			width: 100%;
-			height: 100%;
-			background-color: black;
+			background-color: transparent;
 			box-shadow: none;
 		}
 	}

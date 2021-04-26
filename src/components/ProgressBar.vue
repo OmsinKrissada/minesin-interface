@@ -25,8 +25,8 @@ const Component = defineComponent({
 	watch: {
 		percent: function () {
 			let color;
-			if (this.percent > 80) color = '#f55442';
-			else if (this.percent > 50) color = '#fcba03'
+			if (this.percent > 85) color = '#f55442';
+			else if (this.percent > 70) color = '#d49816'
 			else color = '#4bc588';
 			this.barStyles = {
 				width: this.percent + '%',
@@ -63,6 +63,7 @@ export default Component
 	border-radius: 8px;
 }
 .bar {
+	color: #d49816;
 	width: 0px;
 	height: 100%;
 	border-radius: 8px;
