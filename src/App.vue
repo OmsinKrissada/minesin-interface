@@ -49,11 +49,14 @@ export default class App extends Vue {
 
 :root {
 	font-size: 20px;
+
 	/* font-size: 2vmin; */
 }
 
 * {
 	margin: 0;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
 
 body {
@@ -71,8 +74,6 @@ body::-webkit-scrollbar {
 	flex-direction: column;
 	justify-content: flex-start;
 	font-family: Avenir, Helvetica, Arial, sans-serif;
-	/* -webkit-font-smoothing: antialiased; */
-	/* -moz-osx-font-smoothing: grayscale; */
 	text-align: center;
 	color: #2c3e50;
 }

@@ -128,29 +128,24 @@
 						class="chart"
 					></canvas>
 				</div> -->
+
 				<div class="box">
+					<p>Resources</p>
 					<ring-loader
-						:loading="loading_cpuChart"
+						:loading="true"
 						color="#FFFFFF"
 						class="loader"
 					></ring-loader>
-					<canvas
-						v-show="!loading_cpuChart"
-						ref="cpuChart"
-						class="chart"
-					></canvas>
-				</div>
-				<div class="box">
-					<ring-loader
-						:loading="loading_memChart"
-						color="#FFFFFF"
-						class="loader"
-					></ring-loader>
-					<canvas
-						v-show="!loading_memChart"
-						ref="memChart"
-						class="chart"
-					></canvas>
+					<progress-bar
+						title="CPU usage"
+						:percent="cpuPercent"
+						class="box"
+					></progress-bar>
+					<progress-bar
+						title="RAM usage"
+						:percent="ramPercent"
+						class="box"
+					></progress-bar>
 				</div>
 			</span>
 		</div>
@@ -161,6 +156,7 @@
 import { Options, Vue } from 'vue-class-component';
 import HelloWorld from '@/components/HelloWorld.vue'; // @ is an alias to /src
 import RingLoader from 'vue-spinner/src/RingLoader.vue'
+import ProgressBar from '@/components/ProgressBar.vue';
 import axios, { AxiosError } from 'axios';
 import moment from 'moment';
 import { Chart, LinearScale, registerables } from 'chart.js'
@@ -170,15 +166,21 @@ import * as Helper from '@/Helper';
 @Options({
 	components: {
 		HelloWorld,
-		RingLoader
+		RingLoader,
+		ProgressBar
 	},
 })
 export default class Dashboard extends Vue {
 
+	yayprop?: number;
+
+
 	loading_member = true;
 	loading_cpuChart = true;
-	loading_memChart = true;
-	loading_statChart = true;
+	loading_ramChart = true;
+
+	cpuPercent = 0;
+	ramPercent = 0;
 
 	online_members: any[] = [];
 	offline_members: any[] = [];
@@ -246,6 +248,9 @@ export default class Dashboard extends Vue {
 	}
 
 	mounted() {
+		setInterval(() => {
+			this.yayprop = Math.ceil(Math.random() * 100);
+		}, 1000)
 		if (sessionStorage.getItem('live_member')) {
 			if (sessionStorage.getItem('live_member') == '1') this.doLive = true;
 			else this.doLive = false;
@@ -254,157 +259,73 @@ export default class Dashboard extends Vue {
 
 		this.getMember();
 		if (this.doLive) this.member_interval = setInterval(this.getMember, 1000);
-		// axios.get(endpoint + '/members', { headers: { Authorization: `Bearer ${localStorage.accessToken}` } }).then(res => {
-		// 	for (const member of res.data) {
-		// 		if (member.online) {
-		// 			member.status = 'Online'
-		// 			member.datetime = member.onlineFor ? `${this.fullDurationString(member.onlineFor)}` : 'invalid time format'
-		// 		} else {
-		// 			member.status = 'Last seen'
-		// 			member.datetime = member.lastseen ? `${moment(member.lastseen).fromNow()}` : 'invalid date format'
-		// 			console.log(member.lastseen)
-		// 		}
-		// 		this.members.push(member);
-		// 	}
-		// }).catch((err: AxiosError) => {
-		// 	if (err.message) {
-		// 		console.error(err.message)
-		// 		this.error = true;
-		// 	}
-		// }).finally(() => this.loading_member = false)
 
 		Chart.register(...registerables);
 
 		axios.get(endpoint + '/cpuusage', { headers: { Authorization: `Bearer ${localStorage.accessToken}` } }).then(res => {
-			const cpupercent = res.data.percent;
+			this.cpuPercent = res.data.percent.toFixed(2);
 			this.loading_cpuChart = false;
-			var ctx: any = this.$refs['cpuChart'];
-			var cpuChart = new Chart(ctx, {
-				type: 'doughnut',
-				data: {
-					labels: ['Used', 'Free'],
-					datasets: [{
-						label: 'CPU Usage (%)',
-						data: [cpupercent, 100 - (cpupercent ?? 0)],
-						backgroundColor: [
-							'rgba(255, 99, 132, 0.2)',
-							'rgba(54, 162, 235, 0.2)',
-						],
-						borderColor: [
-							'rgba(255, 99, 132, 1)',
-							'rgba(54, 162, 235, 1)',
-						],
-						borderWidth: 1
-					}]
-				},
-				options: {
-					responsive: true,
-					plugins: {
-						legend: {
-							position: 'bottom',
-						},
-						title: {
-							display: true,
-							text: 'CPU Usage (%)',
-							color: '#84ff00'
-						}
-					}
-				},
-			});
 		})
 
 		axios.get(endpoint + '/memusage', { headers: { Authorization: `Bearer ${localStorage.accessToken}` } }).then(res => {
-			const mempercent = res.data.percent;
-			this.loading_memChart = false;
-			var ctx: any = this.$refs['memChart'];
-			var memChart = new Chart(ctx, {
-				type: 'doughnut',
-				data: {
-					labels: ['Used', 'Free'],
-					datasets: [{
-						label: 'Memory Usage (%)',
-						data: [mempercent, 100 - (mempercent ?? 0)],
-						backgroundColor: [
-							'rgba(255, 99, 132, 0.2)',
-							'rgba(54, 162, 235, 0.2)',
-						],
-						borderColor: [
-							'rgba(255, 99, 132, 1)',
-							'rgba(54, 162, 235, 1)',
-						],
-						borderWidth: 1
-					}]
-				},
-				options: {
-					responsive: true,
-					plugins: {
-						legend: {
-							position: 'bottom',
-						},
-						title: {
-							display: true,
-							text: 'Memory Usage (%)',
-							color: '#84ff00'
-						}
-					}
-				},
-			});
+			this.ramPercent = res.data.percent.toFixed(2);
+			this.loading_ramChart = false;
 		})
 
-		axios.get(endpoint + '/memberstat', { headers: { Authorization: `Bearer ${localStorage.accessToken}` } }).then(res => {
-			const playercounts = res.data.counts;
-			const labels = [];
-			for (let i = 12; i >= 0; i--) {
-				labels.push(`${i} hrs ago`)
-			}
-			this.loading_statChart = false;
-			var ctx: any = this.$refs['statChart'];
-			var statChart = new Chart(ctx, {
-				type: 'line',
-				data: {
-					labels: labels,
-					datasets: [{
-						label: 'count',
-						data: playercounts,
-						backgroundColor: 'rgba(255, 99, 132, 0.2)',
-						borderColor: 'rgba(255, 99, 132, 1)',
-						borderWidth: 1,
-						tension: 0.4,
-						pointRadius: 1,
-					}],
-				},
-				options: {
-					responsive: true,
-					plugins: {
-						legend: {
-							position: 'bottom',
-						},
-						title: {
-							display: true,
-							text: 'Player Count',
-							color: '#84ff00'
-						},
-						decimation: { enabled: true, samples: 12 },
-					},
-					scales: {
-						x: {
-							beginAtZero: true,
-							ticks: {
-								callback: function (label, index, labels) {
-									if (+label % 10 == 0) {
-										return label.toString();
-									} else {
-										return '';
-									}
+		// axios.get(endpoint + '/memberstat', { headers: { Authorization: `Bearer ${localStorage.accessToken}` } }).then(res => {
+		// 	const playercounts = res.data.counts;
+		// 	const labels = [];
+		// 	for (let i = 12; i >= 0; i--) {
+		// 		labels.push(`${i} hrs ago`)
+		// 	}
+		// 	this.loading_statChart = false;
+		// 	var ctx: any = this.$refs['statChart'];
+		// 	var statChart = new Chart(ctx, {
+		// 		type: 'line',
+		// 		data: {
+		// 			labels: labels,
+		// 			datasets: [{
+		// 				label: 'count',
+		// 				data: playercounts,
+		// 				backgroundColor: 'rgba(255, 99, 132, 0.2)',
+		// 				borderColor: 'rgba(255, 99, 132, 1)',
+		// 				borderWidth: 1,
+		// 				tension: 0.4,
+		// 				pointRadius: 1,
+		// 			}],
+		// 		},
+		// 		options: {
+		// 			responsive: true,
+		// 			plugins: {
+		// 				legend: {
+		// 					position: 'bottom',
+		// 				},
+		// 				title: {
+		// 					display: true,
+		// 					text: 'Player Count',
+		// 					color: '#84ff00'
+		// 				},
+		// 				decimation: { enabled: true, samples: 12 },
+		// 			},
+		// 			scales: {
+		// 				x: {
+		// 					beginAtZero: true,
+		// 					ticks: {
+		// 						callback: function (label, index, labels) {
+		// 							if (+label % 10 == 0) {
+		// 								return label.toString();
+		// 							} else {
+		// 								return '';
+		// 							}
 
-								}
-							}
-						},
+		// 						}
+		// 					}
+		// 				},
 
-					},
-				},
-			});
-		})
+		// 			},
+		// 		},
+		// 	});
+		// })
 	}
 }
 </script>
@@ -506,11 +427,6 @@ export default class Dashboard extends Vue {
 	#member-loader {
 		padding: 15px;
 	}
-}
-
-#online-members-box:last-child {
-	border-bottom: 1px solid white;
-	background-color: #00ccff;
 }
 
 #member-border {
@@ -644,6 +560,15 @@ export default class Dashboard extends Vue {
 	// width: 40%;
 	width: 30%;
 
+	p {
+		align-self: flex-start;
+		margin-bottom: 20px;
+		color: white;
+		font-size: 30px;
+		font-weight: bold;
+		font-family: Inter, system-ui;
+	}
+
 	div {
 		display: flex;
 		flex-direction: column;
@@ -654,18 +579,17 @@ export default class Dashboard extends Vue {
 		background-color: rgb(31, 41, 55); // ideal's
 
 		// box-shadow: 0px 0px 10px #000000;
-		// width: 100%;
-		width: 312px;
-		height: 312px;
+		padding: 20px 20px;
 		margin: 0px 5px 25px 5px;
 
 		.loader {
-			margin: 0;
-			background-color: transparent;
+			position: absolute;
+			visibility: hidden;
+			width: 100%;
+			height: 100%;
+			background-color: black;
 			box-shadow: none;
 		}
-	}
-	.chart {
 	}
 }
 
