@@ -39,7 +39,9 @@
 								/>
 								<div>
 									<h4 id="m_ign">{{ member.ign }}</h4>
-									<p id="m_uuid">{{ member.uuid }}</p>
+									<p id="m_uuid" class="hide-mobile">
+										{{ member.uuid }}
+									</p>
 								</div>
 							</span>
 							<span id="righter">
@@ -49,7 +51,19 @@
 									</p>
 									<p id="m_datetime">{{ member.datetime }}</p>
 								</div>
-								<p id="m_location">{{ member.location }}</p>
+								<div class="m-location" id="m-location-online">
+									<p>{{ member.location }}</p>
+									<svg
+										style="width: 20px; height: 20px"
+										viewBox="0 0 24 24"
+										class="icon"
+									>
+										<path
+											fill="currentColor"
+											d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"
+										/>
+									</svg>
+								</div>
 							</span>
 						</span>
 					</div>
@@ -73,7 +87,9 @@
 								/>
 								<div>
 									<h4 id="m_ign">{{ member.ign }}</h4>
-									<p id="m_uuid">{{ member.uuid }}</p>
+									<p id="m_uuid" class="hide-mobile">
+										{{ member.uuid }}
+									</p>
 								</div>
 							</span>
 							<span id="righter">
@@ -81,7 +97,19 @@
 									<p id="m_status">Last seen</p>
 									<p id="m_datetime">{{ member.datetime }}</p>
 								</div>
-								<p id="m_location">{{ member.location }}</p>
+								<div class="m-location" id="m-location-offline">
+									<p>{{ member.location }}</p>
+									<svg
+										style="width: 20px; height: 20px"
+										viewBox="0 0 24 24"
+										class="icon"
+									>
+										<path
+											fill="currentColor"
+											d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"
+										/>
+									</svg>
+								</div>
 							</span>
 						</span>
 					</div>
@@ -196,12 +224,11 @@ export default class Dashboard extends Vue {
 				if (member.online) {
 					// member.ign = '🟢 ' + member.ign;
 					member.datetime = member.onlineFor ? `${this.fullDurationString(moment.duration(member.onlineFor, 'ms'))}` : 'invalid time format'
-					member.location = (member.location ?? '') + ' 🟢'
+					member.location = member.location ?? ''
 					onlines.push(member);
 				} else {
-					// member.ign = '⚫ ' + member.ign;
 					member.datetime = member.lastseen ? `${moment(member.lastseen).fromNow()}` : 'invalid date format'
-					member.location = '⚫'
+					member.location = 'Offline'
 					offlines.push(member);
 
 				}
@@ -587,11 +614,24 @@ export default class Dashboard extends Vue {
 			// text-shadow: 0px 0px 2px black;
 		}
 
-		#m_location {
-			color: hsl(165, 86%, 42%);
+		.m-location {
+			display: flex;
+			align-content: center;
+
 			text-transform: uppercase;
 			font-weight: bold;
-			text-shadow: 0px 0px 2px black;
+			// text-shadow: 0px 0px 2px black;y
+
+			.icon {
+				margin-left: 10px;
+			}
+		}
+
+		#m-location-online {
+			color: hsl(165, 86%, 42%);
+		}
+		#m-location-offline {
+			color: rgb(94, 105, 122);
 		}
 	}
 }
@@ -630,6 +670,10 @@ export default class Dashboard extends Vue {
 }
 
 @media only screen and (max-width: 768px) {
+	.hide-mobile {
+		position: absolute;
+		visibility: hidden;
+	}
 	#container {
 		flex-direction: column;
 		align-items: center;
@@ -645,7 +689,7 @@ export default class Dashboard extends Vue {
 		justify-content: flex-start;
 		align-items: flex-start;
 		#lefter {
-			flex-wrap: wrap;
+			// flex-wrap: wrap;
 		}
 		#righter {
 			flex-direction: row;
