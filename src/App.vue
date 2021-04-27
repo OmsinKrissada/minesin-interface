@@ -60,7 +60,7 @@ export default class App extends Vue {
 }
 
 body {
-	overflow: auto; /* Hide scrollbars */
+	overflow-x: hidden;
 }
 
 body::-webkit-scrollbar {

@@ -1,16 +1,13 @@
 <template>
 	<div class="dashboard">
-		<div id="connection-banner" v-if="connectionErrorText.length > 0">
-			<transition name="fade" mode="out-in">
-				<div
-					v-if="connectionErrorText.length > 0"
-					id="connection-banner-box"
-				>
+		<transition name="fade" mode="out-in" tag="div">
+			<div id="connection-banner" v-if="connectionErrorText.length > 0">
+				<div id="connection-banner-box">
 					<ring-loader color="#FFFFFF" class="loader"></ring-loader>
 					<p>{{ connectionErrorText }}</p>
 				</div>
-			</transition>
-		</div>
+			</div>
+		</transition>
 		<div id="container">
 			<span id="leftbox" class="box">
 				<span id="labelbox">
@@ -371,7 +368,6 @@ export default class Dashboard extends Vue {
 		width: 100vw;
 		height: 100vh;
 	}
-
 	.loader {
 		// background-color: green;
 		margin-bottom: 50px;
@@ -648,6 +644,9 @@ export default class Dashboard extends Vue {
 		align-items: center;
 	}
 	#leftbox {
+		width: 95%;
+	}
+	#member-border {
 		width: 95%;
 	}
 	.member-box {
