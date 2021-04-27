@@ -1,10 +1,10 @@
 <template>
 	<div class="dashboard">
-		<div>
+		<div id="connection-banner" v-if="connectionErrorText.length > 0">
 			<transition name="fade" mode="out-in">
 				<div
 					v-if="connectionErrorText.length > 0"
-					id="connection-banner"
+					id="connection-banner-box"
 				>
 					<ring-loader color="#FFFFFF" class="loader"></ring-loader>
 					<p>{{ connectionErrorText }}</p>
@@ -349,19 +349,28 @@ export default class Dashboard extends Vue {
 }
 
 #connection-banner {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
+	position: fixed;
+	top: 0%;
+	z-index: 5;
 
-	position: absolute;
 	background-color: rgba(0, 0, 0, 0.733);
 	// backdrop-filter: blur(5px);
 
-	width: 100%;
-	height: 100%;
+	width: 100vw;
+	height: 100vh;
 
 	transition: 0.5s;
+
+	#connection-banner-box {
+		display: flex;
+		position: fixed;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+
+		width: 100vw;
+		height: 100vh;
+	}
 
 	.loader {
 		// background-color: green;

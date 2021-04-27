@@ -50,6 +50,9 @@ export default class NavBar extends Vue {
 
 <style scoped lang="scss">
 nav {
+	// position: sticky;
+	// top: 0%;
+	z-index: 10;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
