@@ -23,36 +23,41 @@
 					<p v-if="error" style="color: #ff0000aa; margin: auto">
 						Error loading list, try relog
 					</p>
-					<div name="" tag="p" id="online-members-box">
+					<div name="list" tag="div" id="online-members-box">
 						<span
-							v-for="member in online_members"
-							:key="member"
+							v-for="online_member in online_members"
+							:key="online_member"
 							class="box member-item onlinemem"
 						>
 							<span id="lefter">
 								<img
-									:src="member.skinURL"
+									:src="online_member.skinURL"
 									alt="skin"
 									width="50"
 									height="50"
 									id="m_skin"
 								/>
 								<div>
-									<h4 id="m_ign">{{ member.ign }}</h4>
+									<h4 id="m_ign">{{ online_member.ign }}</h4>
 									<p id="m_uuid" class="hide-mobile">
-										{{ member.uuid }}
+										{{ online_member.uuid }}
 									</p>
 								</div>
 							</span>
 							<span id="righter">
 								<div>
-									<p id="m_status" v-if="member.datetime">
+									<p
+										id="m_status"
+										v-if="online_member.datetime"
+									>
 										Online for
 									</p>
-									<p id="m_datetime">{{ member.datetime }}</p>
+									<p id="m_datetime">
+										{{ online_member.datetime }}
+									</p>
 								</div>
 								<div class="m-location" id="m-location-online">
-									<p>{{ member.location }}</p>
+									<p>{{ online_member.location }}</p>
 									<svg
 										style="width: 20px; height: 20px"
 										viewBox="0 0 24 24"
@@ -73,32 +78,39 @@
 					></div>
 					<div name="" tag="p">
 						<span
-							v-for="member in offline_members"
-							:key="member"
+							v-for="offline_member in offline_members"
+							:key="offline_member"
 							class="box member-item offlinemem"
 						>
 							<span id="lefter">
 								<img
-									:src="member.skinURL"
+									:src="offline_member.skinURL"
 									alt="skin"
 									width="50"
 									height="50"
 									id="m_skin"
 								/>
 								<div>
-									<h4 id="m_ign">{{ member.ign }}</h4>
+									<h4 id="m_ign">{{ offline_member.ign }}</h4>
 									<p id="m_uuid" class="hide-mobile">
-										{{ member.uuid }}
+										{{ offline_member.uuid }}
 									</p>
 								</div>
 							</span>
 							<span id="righter">
 								<div>
-									<p id="m_status">Last seen</p>
-									<p id="m_datetime">{{ member.datetime }}</p>
+									<p
+										id="m_status"
+										v-if="offline_member.datetime"
+									>
+										Last seen
+									</p>
+									<p id="m_datetime">
+										{{ offline_member.datetime }}
+									</p>
 								</div>
 								<div class="m-location" id="m-location-offline">
-									<p>{{ member.location }}</p>
+									<p>{{ offline_member.location }}</p>
 									<svg
 										style="width: 20px; height: 20px"
 										viewBox="0 0 24 24"
@@ -157,10 +169,11 @@ import { Options, Vue } from 'vue-class-component';
 import HelloWorld from '@/components/HelloWorld.vue'; // @ is an alias to /src
 import RingLoader from 'vue-spinner/src/RingLoader.vue'
 import ProgressBar from '@/components/ProgressBar.vue';
-import axios, { AxiosError } from 'axios';
+
+import { AxiosError } from 'axios';
 import moment from 'moment';
-import { Chart, LinearScale, registerables } from 'chart.js'
-import { endpoint } from '../config.json';
+import { Chart, registerables } from 'chart.js'
+import { io } from 'socket.io-client'
 import * as Helper from '@/Helper';
 
 @Options({
@@ -171,9 +184,6 @@ import * as Helper from '@/Helper';
 	},
 })
 export default class Dashboard extends Vue {
-
-	yayprop?: number;
-
 
 	loading_member = true;
 	loading_cpuChart = true;
@@ -188,7 +198,7 @@ export default class Dashboard extends Vue {
 	member_interval: number | undefined;
 	neterror = false;
 
-	fullDurationString(duration: moment.Duration) {
+	fullDurationString(duration: moment.Duration): string {
 		let str = '';
 		const days = Math.floor(duration.asDays());
 		const hours = duration.hours();
@@ -201,131 +211,127 @@ export default class Dashboard extends Vue {
 		return str;
 	}
 
-	toggleLive() {
+	toggleLive(): void {
 		if (this.doLive) {
 			clearInterval(this.member_interval)
 			this.doLive = false;
 			sessionStorage.setItem('live_member', '0');
 		} else {
-			this.member_interval = setInterval(this.getMember, 1000);
+			// this.member_interval = setInterval(this.getMember, 1000);
 			this.doLive = true;
 			sessionStorage.setItem('live_member', '1');
 		}
 	}
 
 
-	unmounted() {
+	unmounted(): void {
 		clearInterval(this.member_interval);
 	}
 
-	getMember() {
+	// getMember() {
+	// }
+
+	mounted(): void {
+		if (sessionStorage.getItem('live_member')) {
+			if (sessionStorage.getItem('live_member') == '1') this.doLive = true;
+			else this.doLive = false;
+		}
+
+		// ---------------------- SOCKET ----------------------
+
+		const socket = io("http://omsinkrissada.sytes.net:3002", { path: '/socketio/minecraft' });
+		socket.on('connect', () => {
+			console.log('connected');
+		})
+
+		// Get initial member data
 		Helper.get('/members').then(data => {
+			console.log('got data');
+
 			const onlines = [];
 			const offlines = [];
 			for (const member of data) {
 				if (member.online) {
 					// member.ign = '🟢 ' + member.ign;
-					member.datetime = member.onlineFor ? `${this.fullDurationString(moment.duration(member.onlineFor, 'ms'))}` : 'invalid time format'
+					member.datetime = member.onlineSince ? `${this.fullDurationString(moment.duration(moment().valueOf() - moment(member.onlineSince).valueOf(), 'ms'))}` : 'invalid time format'
 					member.location = member.location ?? ''
 					onlines.push(member);
 				} else {
-					member.datetime = member.lastseen ? `${moment(member.lastseen).fromNow()}` : 'invalid date format'
+					member.datetime = member.offlineSince ? `${moment(member.lastseen).fromNow()}` : 'invalid date format'
 					member.location = 'Offline'
 					offlines.push(member);
 
 				}
 			}
-			onlines.sort((a, b) => b.onlineFor - a.onlineFor);
-			offlines.sort((a, b) => moment(b.lastseen).valueOf() - moment(a.lastseen).valueOf());
+			onlines.sort((a, b) => moment(a.onlineSince).valueOf() - moment(b.onlineSince).valueOf());
+			offlines.sort((a, b) => moment(b.offlineSince).valueOf() - moment(a.offlineSince).valueOf());
 			this.online_members = onlines;
 			this.offline_members = offlines;
+			updateOnlineMemberTime();
+			updateOfflineMemberTime();
 		}).catch((err: AxiosError) => {
 			if (err.message) {
 				console.error(err.message)
 				this.neterror = true;
 			}
 		}).finally(() => this.loading_member = false)
-	}
 
-	mounted() {
-		setInterval(() => {
-			this.yayprop = Math.ceil(Math.random() * 100);
-		}, 1000)
-		if (sessionStorage.getItem('live_member')) {
-			if (sessionStorage.getItem('live_member') == '1') this.doLive = true;
-			else this.doLive = false;
+		socket.on('memberLocationUpdate', updatedMember => {
+			this.online_members.filter(member => member.uuid == updatedMember.uuid)[0].location = updatedMember.location
+		})
+
+		socket.on('memberStatusUpdate', updatedMember => {
+			if (updatedMember.online) {
+				const member = this.offline_members.filter(member => member.uuid == updatedMember.uuid)[0];
+				this.offline_members = this.offline_members.filter(member => member.uuid != updatedMember.uuid);
+
+				member.onlineSince = new Date();
+				member.location = member.location ?? ''
+				if (member.location == 'offline') member.location = '';
+				this.online_members.push(member)
+				updateOnlineMemberTime();
+			} else {
+				const member = this.online_members.filter(member => member.uuid == updatedMember.uuid)[0];
+				this.online_members = this.online_members.filter(member => member.uuid != updatedMember.uuid);
+
+				member.offlineSince = new Date();
+				member.location = 'offline'
+				this.offline_members.unshift(member)
+				updateOfflineMemberTime();
+			}
+		})
+
+		socket.on('resourcesStatus', res => {
+			this.cpuPercent = res.cpuPercent.toFixed(2);
+			this.ramPercent = res.ramPercent.toFixed(2);
+		})
+		socket.on('disconnect', () => {
+			console.log('disconnected')
+		})
+		// ----------------------------------------------------
+
+		const updateOnlineMemberTime = () => {
+			this.online_members.map(member => {
+				const durationms = moment().valueOf() - moment(member.onlineSince).valueOf();
+				member.datetime = `${this.fullDurationString(moment.duration(durationms, 'ms'))}`
+			});
+		}
+		const updateOfflineMemberTime = () => {
+			this.offline_members.map(member => {
+				member.datetime = member.offlineSince ? moment(member.offlineSince).fromNow() : 'invalid time format'
+			});
 		}
 
+		setInterval(() => {
+			updateOnlineMemberTime();
+			updateOfflineMemberTime();
+		}, 1000)
 
-		this.getMember();
-		if (this.doLive) this.member_interval = setInterval(this.getMember, 1000);
+
+		// this.getMember();
+		// if (this.doLive) this.member_interval = setInterval(this.getMember, 1000);
 
 		Chart.register(...registerables);
-
-		axios.get(endpoint + '/cpuusage', { headers: { Authorization: `Bearer ${localStorage.accessToken}` } }).then(res => {
-			this.cpuPercent = res.data.percent.toFixed(2);
-			this.loading_cpuChart = false;
-		})
-
-		axios.get(endpoint + '/memusage', { headers: { Authorization: `Bearer ${localStorage.accessToken}` } }).then(res => {
-			this.ramPercent = res.data.percent.toFixed(2);
-			this.loading_ramChart = false;
-		})
-
-		// axios.get(endpoint + '/memberstat', { headers: { Authorization: `Bearer ${localStorage.accessToken}` } }).then(res => {
-		// 	const playercounts = res.data.counts;
-		// 	const labels = [];
-		// 	for (let i = 12; i >= 0; i--) {
-		// 		labels.push(`${i} hrs ago`)
-		// 	}
-		// 	this.loading_statChart = false;
-		// 	var ctx: any = this.$refs['statChart'];
-		// 	var statChart = new Chart(ctx, {
-		// 		type: 'line',
-		// 		data: {
-		// 			labels: labels,
-		// 			datasets: [{
-		// 				label: 'count',
-		// 				data: playercounts,
-		// 				backgroundColor: 'rgba(255, 99, 132, 0.2)',
-		// 				borderColor: 'rgba(255, 99, 132, 1)',
-		// 				borderWidth: 1,
-		// 				tension: 0.4,
-		// 				pointRadius: 1,
-		// 			}],
-		// 		},
-		// 		options: {
-		// 			responsive: true,
-		// 			plugins: {
-		// 				legend: {
-		// 					position: 'bottom',
-		// 				},
-		// 				title: {
-		// 					display: true,
-		// 					text: 'Player Count',
-		// 					color: '#84ff00'
-		// 				},
-		// 				decimation: { enabled: true, samples: 12 },
-		// 			},
-		// 			scales: {
-		// 				x: {
-		// 					beginAtZero: true,
-		// 					ticks: {
-		// 						callback: function (label, index, labels) {
-		// 							if (+label % 10 == 0) {
-		// 								return label.toString();
-		// 							} else {
-		// 								return '';
-		// 							}
-
-		// 						}
-		// 					}
-		// 				},
-
-		// 			},
-		// 		},
-		// 	});
-		// })
 	}
 }
 </script>
@@ -634,5 +640,6 @@ export default class Dashboard extends Vue {
 .list-enter, .list-leave-to /* .list-leave-active below version 2.1.8 */ {
 	opacity: 0;
 	transform: translateY(30px);
+	transition: all 1s;
 }
 </style>

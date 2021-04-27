@@ -1,7 +1,6 @@
 // import Vue from "vue"
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import Dashboard from "../views/Dashboard.vue"
-import Home from '../views/Home.vue'
 import Cover from "../views/Cover.vue"
 import Map from "../views/Map.vue"
 
