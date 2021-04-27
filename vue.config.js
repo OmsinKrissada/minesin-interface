@@ -9,7 +9,7 @@ module.exports = {
 	},
 
     // publicPath: "/minecraft/"
-    publicPath: '/minecraft',
+    publicPath: '/',
 
     assetsDir: 'assets'
 };
