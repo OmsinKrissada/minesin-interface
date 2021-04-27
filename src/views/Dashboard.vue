@@ -563,17 +563,6 @@ export default class Dashboard extends Vue {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	// width: 40%;
-	width: 30%;
-
-	p {
-		align-self: flex-start;
-		margin-bottom: 20px;
-		color: white;
-		font-size: 30px;
-		font-weight: bold;
-		font-family: Inter, system-ui;
-	}
 
 	div {
 		display: flex;
@@ -585,8 +574,20 @@ export default class Dashboard extends Vue {
 		background-color: rgb(31, 41, 55); // ideal's
 
 		// box-shadow: 0px 0px 10px #000000;
+		box-sizing: border-box;
+		width: 400px;
+
 		padding: 20px 20px;
 		margin: 0px 5px 25px 5px;
+
+		p {
+			align-self: flex-start;
+			margin-bottom: 20px;
+			color: white;
+			font-size: 30px;
+			font-weight: bold;
+			font-family: Inter, system-ui;
+		}
 
 		.loader {
 			position: absolute;
@@ -599,11 +600,10 @@ export default class Dashboard extends Vue {
 
 @media only screen and (max-width: 768px) {
 	.hide-mobile {
-		position: absolute;
-		visibility: hidden;
+		display: none;
 	}
 	#container {
-		flex-direction: column;
+		flex-direction: column-reverse;
 		align-items: center;
 	}
 	#leftbox {
@@ -624,6 +624,12 @@ export default class Dashboard extends Vue {
 			justify-content: space-between;
 			flex-wrap: wrap;
 
+			width: 100%;
+		}
+	}
+	#statistic {
+		width: 95%;
+		div {
 			width: 100%;
 		}
 	}

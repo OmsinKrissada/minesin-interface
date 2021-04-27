@@ -45,6 +45,7 @@ export default Component
 	flex-direction: column;
 	align-items: flex-start;
 	padding: 10px;
+	width: 100%;
 
 	font-family: Inter, system-ui;
 	// background-color: rgb(57, 64, 73);
@@ -61,6 +62,7 @@ export default Component
 	height: 35px;
 	background-color: rgb(58, 71, 88);
 	border-radius: 8px;
+	width: 100%;
 }
 .bar {
 	color: #d49816;
