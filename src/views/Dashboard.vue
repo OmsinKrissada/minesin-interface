@@ -1,7 +1,7 @@
 <template>
 	<div class="dashboard">
 		<div>
-			<transition name="fade">
+			<transition name="fade" mode="out-in">
 				<div
 					v-if="connectionErrorText.length > 0"
 					id="connection-banner"
