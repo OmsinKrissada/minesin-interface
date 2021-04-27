@@ -1,5 +1,16 @@
 <template>
 	<div class="dashboard">
+		<div>
+			<transition name="fade">
+				<div
+					v-if="connectionErrorText.length > 0"
+					id="connection-banner"
+				>
+					<ring-loader color="#FFFFFF" class="loader"></ring-loader>
+					<p>{{ connectionErrorText }}</p>
+				</div>
+			</transition>
+		</div>
 		<div id="container">
 			<span id="leftbox" class="box">
 				<span id="labelbox">
@@ -14,12 +25,12 @@
 					</button>
 				</span>
 				<div class="member-box">
-					<ring-loader
+					<!-- <ring-loader
 						:loading="loading_member"
 						color="#FFFFFF"
 						id="member-loader"
 						style="margin: auto"
-					></ring-loader>
+					></ring-loader> -->
 					<p v-if="error" style="color: #ff0000aa; margin: auto">
 						Error loading list, try relog
 					</p>
@@ -173,8 +184,9 @@ import ProgressBar from '@/components/ProgressBar.vue';
 import { AxiosError } from 'axios';
 import moment from 'moment';
 import { Chart, registerables } from 'chart.js'
-import { io } from 'socket.io-client'
+import { io, Socket } from 'socket.io-client'
 import * as Helper from '@/Helper';
+import { DefaultEventsMap } from 'node_modules/socket.io-client/build/typed-events';
 
 @Options({
 	components: {
@@ -184,6 +196,10 @@ import * as Helper from '@/Helper';
 	},
 })
 export default class Dashboard extends Vue {
+
+	socket?: Socket<DefaultEventsMap, DefaultEventsMap>;
+	timeUpdateInterval?: number;
+	connectionErrorText = 'Connecting . . .';
 
 	loading_member = true;
 	loading_cpuChart = true;
@@ -195,7 +211,6 @@ export default class Dashboard extends Vue {
 	online_members: any[] = [];
 	offline_members: any[] = [];
 	doLive = true;
-	member_interval: number | undefined;
 	neterror = false;
 
 	fullDurationString(duration: moment.Duration): string {
@@ -211,25 +226,12 @@ export default class Dashboard extends Vue {
 		return str;
 	}
 
-	toggleLive(): void {
-		if (this.doLive) {
-			clearInterval(this.member_interval)
-			this.doLive = false;
-			sessionStorage.setItem('live_member', '0');
-		} else {
-			// this.member_interval = setInterval(this.getMember, 1000);
-			this.doLive = true;
-			sessionStorage.setItem('live_member', '1');
-		}
-	}
-
 
 	unmounted(): void {
-		clearInterval(this.member_interval);
+		clearInterval(this.timeUpdateInterval);
+		this.socket?.disconnect();
+		console.log('unmount detected, disconnected from socket and remove time update interval');
 	}
-
-	// getMember() {
-	// }
 
 	mounted(): void {
 		if (sessionStorage.getItem('live_member')) {
@@ -239,9 +241,10 @@ export default class Dashboard extends Vue {
 
 		// ---------------------- SOCKET ----------------------
 
-		const socket = io("https://omsinkrissada.sytes.net", { path: '/socketio/minecraft' });
-		socket.on('connect', () => {
+		this.socket = io("https://omsinkrissada.sytes.net", { path: '/socketio/minecraft' });
+		this.socket.on('connect', () => {
 			console.log('connected');
+			this.connectionErrorText = '';
 		})
 
 		// Get initial member data
@@ -276,11 +279,11 @@ export default class Dashboard extends Vue {
 			}
 		}).finally(() => this.loading_member = false)
 
-		socket.on('memberLocationUpdate', updatedMember => {
+		this.socket.on('memberLocationUpdate', updatedMember => {
 			this.online_members.filter(member => member.uuid == updatedMember.uuid)[0].location = updatedMember.location
 		})
 
-		socket.on('memberStatusUpdate', updatedMember => {
+		this.socket.on('memberStatusUpdate', updatedMember => {
 			if (updatedMember.online) {
 				const member = this.offline_members.filter(member => member.uuid == updatedMember.uuid)[0];
 				this.offline_members = this.offline_members.filter(member => member.uuid != updatedMember.uuid);
@@ -301,12 +304,13 @@ export default class Dashboard extends Vue {
 			}
 		})
 
-		socket.on('resourcesStatus', res => {
+		this.socket.on('resourcesStatus', res => {
 			this.cpuPercent = res.cpuPercent.toFixed(2);
 			this.ramPercent = res.ramPercent.toFixed(2);
 		})
-		socket.on('disconnect', () => {
+		this.socket.on('disconnect', () => {
 			console.log('disconnected')
+			this.connectionErrorText = 'Disconnected, trying to reconnect . . .';
 		})
 		// ----------------------------------------------------
 
@@ -322,7 +326,7 @@ export default class Dashboard extends Vue {
 			});
 		}
 
-		setInterval(() => {
+		this.timeUpdateInterval = setInterval(() => {
 			updateOnlineMemberTime();
 			updateOfflineMemberTime();
 		}, 1000)
@@ -340,7 +344,35 @@ export default class Dashboard extends Vue {
 .dashboard {
 	// background-color: rgba(19, 40, 59, 0.856);
 	// background-color: hsl(210, 0%, 14%);
+	display: relative;
 	background-color: rgb(17, 24, 39);
+}
+
+#connection-banner {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+
+	position: absolute;
+	background-color: rgba(0, 0, 0, 0.733);
+	// backdrop-filter: blur(5px);
+
+	width: 100%;
+	height: 100%;
+
+	transition: 0.5s;
+
+	.loader {
+		// background-color: green;
+		margin-bottom: 50px;
+	}
+	p {
+		// background-color: aqua;
+		color: white;
+		font-size: 20px;
+		font-family: Inter, Quicksand, system-ui;
+	}
 }
 
 #container {

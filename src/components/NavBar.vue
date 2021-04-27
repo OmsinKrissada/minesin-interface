@@ -122,7 +122,7 @@ nav {
 	// 	color: white;
 	// }
 	#logo {
-		visibility: hidden;
+		display: none;
 	}
 	#container .link {
 		margin: 5px;
