@@ -239,7 +239,7 @@ export default class Dashboard extends Vue {
 
 		// ---------------------- SOCKET ----------------------
 
-		const socket = io("http://omsinkrissada.sytes.net:3002", { path: '/socketio/minecraft' });
+		const socket = io("https://omsinkrissada.sytes.net", { path: '/socketio/minecraft' });
 		socket.on('connect', () => {
 			console.log('connected');
 		})
