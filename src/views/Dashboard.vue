@@ -242,39 +242,39 @@ export default class Dashboard extends Vue {
 		this.socket.on('connect', () => {
 			console.log('connected');
 			this.connectionErrorText = '';
-		})
 
-		// Get initial member data
-		Helper.get('/members').then(data => {
-			console.log('got data');
+			// Get initial member data
+			Helper.get('/members').then(data => {
+				console.log('got data');
 
-			const onlines = [];
-			const offlines = [];
-			for (const member of data) {
-				if (member.online) {
-					// member.ign = '🟢 ' + member.ign;
-					member.datetime = member.onlineSince ? `${this.fullDurationString(moment.duration(moment().valueOf() - moment(member.onlineSince).valueOf(), 'ms'))}` : 'invalid time format'
-					member.location = member.location ?? ''
-					onlines.push(member);
-				} else {
-					member.datetime = member.offlineSince ? `${moment(member.lastseen).fromNow()}` : 'invalid date format'
-					member.location = 'Offline'
-					offlines.push(member);
+				const onlines = [];
+				const offlines = [];
+				for (const member of data) {
+					if (member.online) {
+						// member.ign = '🟢 ' + member.ign;
+						member.datetime = member.onlineSince ? `${this.fullDurationString(moment.duration(moment().valueOf() - moment(member.onlineSince).valueOf(), 'ms'))}` : 'invalid time format'
+						member.location = member.location ?? ''
+						onlines.push(member);
+					} else {
+						member.datetime = member.offlineSince ? `${moment(member.lastseen).fromNow()}` : 'invalid date format'
+						member.location = 'Offline'
+						offlines.push(member);
 
+					}
 				}
-			}
-			onlines.sort((a, b) => moment(a.onlineSince).valueOf() - moment(b.onlineSince).valueOf());
-			offlines.sort((a, b) => moment(b.offlineSince).valueOf() - moment(a.offlineSince).valueOf());
-			this.online_members = onlines;
-			this.offline_members = offlines;
-			updateOnlineMemberTime();
-			updateOfflineMemberTime();
-		}).catch((err: AxiosError) => {
-			if (err.message) {
-				console.error(err.message)
-				this.neterror = true;
-			}
-		}).finally(() => this.loading_member = false)
+				onlines.sort((a, b) => moment(a.onlineSince).valueOf() - moment(b.onlineSince).valueOf());
+				offlines.sort((a, b) => moment(b.offlineSince).valueOf() - moment(a.offlineSince).valueOf());
+				this.online_members = onlines;
+				this.offline_members = offlines;
+				updateOnlineMemberTime();
+				updateOfflineMemberTime();
+			}).catch((err: AxiosError) => {
+				if (err.message) {
+					console.error(err.message)
+					this.neterror = true;
+				}
+			}).finally(() => this.loading_member = false)
+		})
 
 		this.socket.on('memberLocationUpdate', updatedMember => {
 			this.online_members.filter(member => member.uuid == updatedMember.uuid)[0].location = updatedMember.location
