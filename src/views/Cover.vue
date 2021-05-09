@@ -16,10 +16,18 @@
 			<div id="login">
 				<form action="" @submit="authenticate">
 					<input
+						type="text"
+						class="field"
+						v-model="user"
+						placeholder="In-game name"
+						autocomplete="username"
+						autofocus
+					/>
+					<input
 						type="password"
-						id="field"
+						class="field"
 						v-model="pass"
-						placeholder="Passphrase"
+						placeholder="Password"
 						autocomplete="current-password"
 						autofocus
 					/>
@@ -56,6 +64,7 @@ import axios, { AxiosError } from 'axios';
 	}
 })
 export default class Cover extends Vue {
+	user = '';
 	pass = '';
 	error = false;
 	errortxt = '';
@@ -71,20 +80,20 @@ export default class Cover extends Vue {
 		if (this.sending) {
 			e.preventDefault();
 			return;
-		} else if (this.pass == '') {
+		} else if (this.user == '' || this.pass == '') {
 			e.preventDefault();
-			this.errortxt = 'Passphrase cannot be empty';
+			this.errortxt = 'Both fields are required';
 			return;
 		}
 
 		this.sending = true;
-		axios.post(endpoint + '/login', { passphrase: this.pass }, { timeoutErrorMessage: 'Time out!' }).then(res => {
+		axios.post(endpoint + '/login', { username: this.user, password: this.pass }, { timeoutErrorMessage: 'Time out!' }).then(res => {
 			this.errortxt = '';
 			localStorage.setItem('accessToken', res.data.accessToken);
 			router.push('dashboard')
 		}).catch((err: AxiosError) => {
 			if (err.response?.status == 403)
-				this.errortxt = 'Wrong Passphrase'
+				this.errortxt = 'Wrong password or player doesn\'t exist'
 			else if (err.message == 'Network Error') {
 				this.errortxt = 'Please check your internet connection, if problem persists, contact Omsin.'
 			}
@@ -157,9 +166,17 @@ $imgnum: var(--img-num);
 	}
 }
 
-#field {
-	margin: 20px 0 20px 0;
-	padding: 0 10px 0 10px;
+form {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+
+	margin: 20px 0;
+}
+
+.field {
+	padding: 0 10px;
+	margin: 3px 0;
 	height: 2rem;
 	max-width: 60vmin;
 
@@ -194,7 +211,7 @@ $imgnum: var(--img-num);
 	align-items: center;
 	justify-content: space-evenly;
 
-	margin: auto;
+	margin-top: 20px;
 	width: 12.5rem;
 	max-width: 70vmin;
 	height: 3.125rem;

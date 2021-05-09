@@ -4,7 +4,7 @@
 		<div class="bar-box">
 			<div class="bar" id="cpu-bar" v-bind:style="barStyles"></div>
 		</div>
-		<p class="percentage">{{ percent + "%" }}</p>
+		<p class="percentage">{{ (percent ? percent : "--.--") + "%" }}</p>
 	</span>
 </template>
 
@@ -15,7 +15,7 @@ import { defineComponent } from 'vue'
 const Component = defineComponent({
 	props: {
 		title: String,
-		percent: { default: 0, type: Number }
+		percent: { default: null, type: Number }
 	},
 	data: function () {
 		return {

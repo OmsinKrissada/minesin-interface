@@ -227,7 +227,7 @@ export default class Dashboard extends Vue {
 	unmounted(): void {
 		clearInterval(this.timeUpdateInterval);
 		this.socket?.disconnect();
-		console.log('unmount detected, disconnected from socket and remove time update interval');
+		console.log('unmount detected, disconnected from socket and removed time update interval');
 	}
 
 	mounted(): void {
@@ -238,7 +238,13 @@ export default class Dashboard extends Vue {
 
 		// ---------------------- SOCKET ----------------------
 
-		this.socket = io("https://omsinkrissada.sytes.net", { path: '/socketio/minecraft' });
+		this.socket = io("https://omsinkrissada.sytes.net", { path: '/socketio/minecraft', auth: { token: localStorage.accessToken } });
+		this.socket.on('connect_error', (err) => {
+			localStorage.removeItem('accessToken');
+			this.$router.push('/')
+			console.log('PUSHED, YOU SHOULD BE ON LOGIN PAGE BY NOW!!!')
+			console.error(err);
+		})
 		this.socket.on('connect', () => {
 			console.log('connected');
 			this.connectionErrorText = '';
