@@ -12,22 +12,9 @@
 			<span id="leftbox" class="box">
 				<span id="labelbox">
 					<h2>Members</h2>
-					<button
-						id="live"
-						class="box button"
-						:class="doLive ? '' : 'greyscale'"
-						v-on:click="toggleLive"
-					>
-						LIVE
-					</button>
+					<button id="live" class="box">LIVE</button>
 				</span>
 				<div class="member-box">
-					<!-- <ring-loader
-						:loading="loading_member"
-						color="#FFFFFF"
-						id="member-loader"
-						style="margin: auto"
-					></ring-loader> -->
 					<p v-if="error" style="color: #ff0000aa; margin: auto">
 						Error loading list, try relog
 					</p>
@@ -136,26 +123,8 @@
 				</div>
 			</span>
 			<span id="statistic" class="box">
-				<!-- <div class="box">
-					<ring-loader
-						:loading="loading_statChart"
-						color="#FFFFFF"
-						class="loader"
-					></ring-loader>
-					<canvas
-						v-show="!loading_statChart"
-						ref="statChart"
-						class="chart"
-					></canvas>
-				</div> -->
-
 				<div class="box">
 					<p>Resources</p>
-					<ring-loader
-						:loading="loading_cpuChart || loading_ramChart"
-						color="#FFFFFF"
-						class="loader"
-					></ring-loader>
 					<progress-bar
 						title="CPU usage"
 						:percent="cpuPercent"
@@ -207,7 +176,6 @@ export default class Dashboard extends Vue {
 
 	online_members: any[] = [];
 	offline_members: any[] = [];
-	doLive = true;
 	neterror = false;
 
 	fullDurationString(duration: moment.Duration): string {
@@ -231,18 +199,12 @@ export default class Dashboard extends Vue {
 	}
 
 	mounted(): void {
-		if (sessionStorage.getItem('live_member')) {
-			if (sessionStorage.getItem('live_member') == '1') this.doLive = true;
-			else this.doLive = false;
-		}
 
 		// ---------------------- SOCKET ----------------------
 
 		this.socket = io("https://omsinkrissada.sytes.net", { path: '/socketio/minecraft', auth: { token: localStorage.accessToken } });
 		this.socket.on('connect_error', (err) => {
 			localStorage.removeItem('accessToken');
-			this.$router.push('/')
-			console.log('PUSHED, YOU SHOULD BE ON LOGIN PAGE BY NOW!!!')
 			console.error(err);
 		})
 		this.socket.on('connect', () => {
@@ -451,11 +413,6 @@ export default class Dashboard extends Vue {
 	font-size: 0.8rem;
 	text-align: center;
 	line-height: 0px;
-
-	&:hover {
-		color: white;
-		background-color: rgba(255, 0, 0, 0.616);
-	}
 }
 
 .box {
@@ -630,13 +587,6 @@ export default class Dashboard extends Vue {
 			font-size: 30px;
 			font-weight: bold;
 			font-family: Inter, system-ui;
-		}
-
-		.loader {
-			position: absolute;
-			visibility: hidden;
-			background-color: transparent;
-			box-shadow: none;
 		}
 	}
 }

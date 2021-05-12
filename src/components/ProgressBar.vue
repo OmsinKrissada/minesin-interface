@@ -47,7 +47,7 @@ export default Component
 	padding: 10px;
 	width: 100%;
 
-	font-family: Inter, system-ui;
+	font-family: "Inter", system-ui;
 	// background-color: rgb(57, 64, 73);
 }
 
@@ -58,11 +58,11 @@ export default Component
 	margin-bottom: 5px;
 }
 .bar-box {
-	width: 280px;
 	height: 35px;
 	background-color: rgb(58, 71, 88);
 	border-radius: 8px;
 	width: 100%;
+	overflow: hidden;
 }
 .bar {
 	color: #d49816;

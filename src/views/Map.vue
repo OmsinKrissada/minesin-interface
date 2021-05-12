@@ -1,11 +1,6 @@
 <template>
 	<div id="box">
-		<iframe
-			:src="`${endpoint}/map/`"
-			width="100%"
-			height="100%"
-			title="World Map"
-		></iframe>
+		<iframe :src="`${endpoint}/map/`" title="World Map"></iframe>
 		<!-- <div id="lol"></div> -->
 
 		<!-- <html v-html="page" id="frame"></html> -->
@@ -47,6 +42,7 @@ export default class Map extends Vue {
 
 <style scoped lang="scss">
 #box {
+	box-sizing: border-box;
 	height: 50%;
 	margin: 0;
 	padding: 0;
@@ -57,6 +53,8 @@ h3 {
 }
 
 iframe {
+	width: 100%;
+	height: 100%;
 	border: 0;
 }
 </style>

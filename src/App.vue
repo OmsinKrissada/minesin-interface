@@ -1,5 +1,5 @@
 <template>
-	<div id="app">
+	<div id="app" tabindex="0">
 		<NavBar v-if="this.$route.path != '/'" />
 		<router-view v-slot="{ Component }" class="view">
 			<transition name="fade" mode="out-in">
@@ -94,7 +94,7 @@ body::-webkit-scrollbar {
 	border-radius: 5px;
 	outline: none;
 
-	transition: 0.25s;
+	transition: 0.2s;
 }
 
 .view {
