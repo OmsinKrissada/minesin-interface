@@ -1,13 +1,26 @@
 <template>
-	<div
-		id="page"
-		v-bind:style="{
-			backgroundImage:
-				'linear-gradient(to bottom,	rgba(0, 0, 0, 0.25),	rgba(0, 0, 0, 0.5)), url(' +
-				image +
-				')',
-		}"
-	>
+	<div id="page">
+		<div
+			id="cover-image-next"
+			class="cover-image"
+			v-bind:style="{
+				backgroundImage:
+					'linear-gradient(to bottom,	rgba(0, 0, 0, 0.25),	rgba(0, 0, 0, 0.5)), url(' +
+					nextImage +
+					')',
+			}"
+		></div>
+		<div
+			id="cover-image-current"
+			class="cover-image"
+			v-bind:style="{
+				backgroundImage:
+					'linear-gradient(to bottom,	rgba(0, 0, 0, 0.25),	rgba(0, 0, 0, 0.5)), url(' +
+					image +
+					')',
+				opacity: currentImgOpacity,
+			}"
+		></div>
 		<div id="box">
 			<div id="head">
 				<h1 id="logo">MINESIN</h1>
@@ -29,18 +42,26 @@
 						v-model="pass"
 						placeholder="Password"
 						autocomplete="current-password"
-						autofocus
 					/>
-					<button v-if="!sending" id="proceed-button" class="button">
-						<p v-if="!sending">Proceed</p>
-						<!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-						<svg v-if="!sending">
-							<use
-								xlink:href="@/assets/right-arrow.svg#Layer_1"
-							></use>
-						</svg>
-					</button>
-					<pulse-loader :loading="sending"></pulse-loader>
+					<div id="proceed-button-area">
+						<button
+							v-if="!sending"
+							id="proceed-button"
+							class="button"
+						>
+							<p>Proceed</p>
+							<!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+							<svg>
+								<use
+									xlink:href="@/assets/right-arrow.svg#Layer_1"
+								></use>
+							</svg>
+						</button>
+						<pulse-loader
+							:loading="sending"
+							id="loader"
+						></pulse-loader>
+					</div>
 				</form>
 				<p id="error-text">
 					{{ errortxt }}
@@ -66,13 +87,35 @@ import axios, { AxiosError } from 'axios';
 export default class Cover extends Vue {
 	user = '';
 	pass = '';
-	error = false;
 	errortxt = '';
 	sending = false;
 	image = '';
+	nextImage = '';
+	currentImgOpacity = 1;
+	imageInterval: number | undefined;
+
+	randomCoverImage() {
+		return require(`@/assets/bg/${Math.ceil(Math.random() * 21)}.jpg`);
+	}
 
 	mounted() {
-		this.image = require(`@/assets/bg/${Math.ceil(Math.random() * 21)}.jpg`);
+		this.image = this.randomCoverImage();
+		this.imageInterval = setInterval(() => {
+
+
+
+
+			this.nextImage = this.randomCoverImage();
+			this.currentImgOpacity = 0;
+
+			setTimeout(() => {
+				this.image = this.nextImage;
+				this.currentImgOpacity = 1;
+			}, 1000);
+		}, 5000)
+	}
+	unmounted() {
+		clearInterval(this.imageInterval);
 	}
 
 	authenticate(e: any) {
@@ -93,8 +136,8 @@ export default class Cover extends Vue {
 			localStorage.setItem('userSkinURL', res.data.skinURL);
 			router.push('dashboard')
 		}).catch((err: AxiosError) => {
-			if (err.response?.status == 403)
-				this.errortxt = 'Wrong password or player doesn\'t exist'
+			if (err.response?.status == 400)
+				this.errortxt = 'Invalid username or password'
 			else if (err.message == 'Network Error') {
 				this.errortxt = 'Please check your internet connection, if problem persists, contact Omsin.'
 			}
@@ -119,18 +162,29 @@ export default class Cover extends Vue {
 $imgnum: var(--img-num);
 
 #page {
+	// box-sizing: border-box;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	background-size: cover;
-	background-position: bottom;
 	background-color: black;
+}
 
-	// transition: 0.5s;
+.cover-image {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background-size: cover;
+	background-position: center;
+
+	transition: 1s opacity;
 }
 
 #box {
+	position: relative;
+	box-sizing: border-box;
+	z-index: 1;
+
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -138,17 +192,17 @@ $imgnum: var(--img-num);
 
 	background-color: rgba(107, 107, 107, 0.377);
 	padding: 5vmin;
-	margin: 20px;
-	max-width: 80vmin;
+	max-width: 100vw;
 
 	// width: clamp(200px, 50%, 600px);
 
+	border: 1px solid rgba(151, 180, 173, 0.411);
 	border-radius: 10px;
 	backdrop-filter: blur(10px);
 
 	#logo {
 		font-family: "MinecraftBig", Raleway;
-		font-size: 4rem;
+		font-size: 3.6rem;
 		// font-size: clamp(0px, 4rem, 17vmin);
 		font-weight: 100;
 		text-shadow: 5px 5px 0px black;
@@ -158,7 +212,7 @@ $imgnum: var(--img-num);
 		font-family: "Minecraftia", "Trebuchet MS", "Lucida Sans Unicode",
 			"Lucida Grande", "Lucida Sans", Arial, sans-serif, "Arial Narrow",
 			Arial, sans-serif;
-		font-size: 1.5rem;
+		font-size: 1.2rem;
 		// font-size: clamp(0px, 1.5rem, 6vmin);
 		font-weight: 100;
 		text-shadow: 2px 3px 0px black;
@@ -189,7 +243,7 @@ form {
 	border: 2px solid grey;
 	border-radius: 8px;
 	font-size: 0.9rem;
-	font-family: Inter;
+	font-family: "Inter";
 	color: rgb(179, 179, 179);
 
 	transition: 0.2s;
@@ -205,6 +259,13 @@ form {
 	}
 }
 
+#proceed-button-area {
+	margin-top: 20px;
+	width: 12.5rem;
+	max-width: 70vmin;
+	height: 3.125rem;
+}
+
 #proceed-button {
 	background-color: rgba(42, 192, 109, 0.61);
 
@@ -212,10 +273,8 @@ form {
 	align-items: center;
 	justify-content: space-evenly;
 
-	margin-top: 20px;
-	width: 12.5rem;
-	max-width: 70vmin;
-	height: 3.125rem;
+	width: 100%;
+	height: 100%;
 
 	border: 1px solid rgb(42, 214, 119);
 	border-radius: 10px;
@@ -249,17 +308,18 @@ form {
 	}
 }
 
-#error-text {
-	margin: 1rem;
-	text-shadow: 1px 1px 0px black;
-	color: rgb(255, 106, 106);
+#loader {
+	margin-top: 15px;
 }
 
-@media only screen and (max-width: 800px) and (orientation: landscape) {
+#error-text {
+	text-shadow: 1px 1px 0px black;
+	color: rgb(255, 106, 106);
+	font-size: 18px;
+}
+
+@media only screen and (max-width: 800px) {
 	#box {
-		flex-direction: row;
-		padding: 10px 120px 10px 120px;
-		margin: 0;
 		#logo {
 			font-size: 3rem;
 		}
@@ -278,13 +338,19 @@ form {
 			font-size: 0.75rem;
 		}
 
-		#proceed-button {
+		#proceed-button-area {
 			width: 10rem;
 			height: 2.5rem;
 			p {
 				font-size: 1.2rem;
 			}
 		}
+	}
+}
+
+@media only screen and (max-width: 800px) and (orientation: landscape) {
+	#box {
+		flex-direction: row;
 	}
 }
 </style>

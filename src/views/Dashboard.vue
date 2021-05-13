@@ -204,7 +204,6 @@ export default class Dashboard extends Vue {
 
 		this.socket = io("https://omsinkrissada.sytes.net", { path: '/socketio/minecraft', auth: { token: localStorage.accessToken } });
 		this.socket.on('connect_error', (err) => {
-			localStorage.removeItem('accessToken');
 			console.error(err);
 		})
 		this.socket.on('connect', () => {

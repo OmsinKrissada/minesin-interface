@@ -59,10 +59,6 @@ export default class App extends Vue {
 	-moz-osx-font-smoothing: grayscale;
 }
 
-body {
-	overflow-x: hidden;
-}
-
 body::-webkit-scrollbar {
 	width: 0rem;
 }

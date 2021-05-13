@@ -134,6 +134,10 @@ nav {
 				border: 0;
 				margin-top: 25px;
 			}
+
+			&:hover {
+				color: rgb(30, 93, 211);
+			}
 		}
 	}
 
