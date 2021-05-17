@@ -105,7 +105,9 @@
 									</p>
 								</div>
 								<div class="m-location" id="m-location-offline">
-									<p>{{ offline_member.location }}</p>
+									<p id="offline-location">
+										{{ offline_member.location }}
+									</p>
 									<svg
 										style="width: 20px; height: 20px"
 										viewBox="0 0 24 24"
@@ -123,8 +125,41 @@
 				</div>
 			</span>
 			<span id="statistic" class="box">
-				<div class="box">
-					<p>Resources</p>
+				<div id="status-box" class="box">
+					<h3>Server Status</h3>
+					<div v-for="status in serverStatus" v-bind:key="status">
+						<div class="status-item">
+							<svg
+								style="width: 20px; height: 20px"
+								viewBox="0 0 24 24"
+								class="icon"
+								v-if="status.online"
+							>
+								<path
+									fill="hsl(165, 86%, 42%)"
+									d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"
+								/>
+							</svg>
+							<svg
+								style="width: 20px; height: 20px"
+								viewBox="0 0 24 24"
+								class="icon"
+								v-if="!status.online"
+							>
+								<path
+									fill="rgb(94, 105, 122)"
+									d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"
+								/>
+							</svg>
+							<p>
+								{{ status.name }}
+								<!-- {{ status.online ? "Online" : "Offline" }} -->
+							</p>
+						</div>
+					</div>
+				</div>
+				<div id="resource-box" class="box">
+					<h3>Resources</h3>
 					<progress-bar
 						title="CPU usage"
 						:percent="cpuPercent"
@@ -143,20 +178,17 @@
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
-import HelloWorld from '@/components/HelloWorld.vue'; // @ is an alias to /src
 import RingLoader from 'vue-spinner/src/RingLoader.vue'
 import ProgressBar from '@/components/ProgressBar.vue';
 
 import { AxiosError } from 'axios';
 import moment from 'moment';
-import { Chart, registerables } from 'chart.js'
 import { io, Socket } from 'socket.io-client'
 import * as Helper from '@/Helper';
 import { DefaultEventsMap } from 'node_modules/socket.io-client/build/typed-events';
 
 @Options({
 	components: {
-		HelloWorld,
 		RingLoader,
 		ProgressBar
 	},
@@ -173,6 +205,8 @@ export default class Dashboard extends Vue {
 
 	cpuPercent = 0;
 	ramPercent = 0;
+
+	serverStatus = [];
 
 	online_members: any[] = [];
 	offline_members: any[] = [];
@@ -218,7 +252,6 @@ export default class Dashboard extends Vue {
 				const offlines = [];
 				for (const member of data) {
 					if (member.online) {
-						// member.ign = '🟢 ' + member.ign;
 						member.datetime = member.onlineSince ? `${this.fullDurationString(moment.duration(moment().valueOf() - moment(member.onlineSince).valueOf(), 'ms'))}` : 'invalid time format'
 						member.location = member.location ?? ''
 						onlines.push(member);
@@ -272,6 +305,9 @@ export default class Dashboard extends Vue {
 			this.cpuPercent = res.cpuPercent.toFixed(2);
 			this.ramPercent = res.ramPercent.toFixed(2);
 		})
+		this.socket.on('serversStatus', res => {
+			this.serverStatus = res;
+		})
 		this.socket.on('disconnect', () => {
 			console.log('disconnected')
 			this.connectionErrorText = 'Disconnected, trying to reconnect . . .';
@@ -296,10 +332,7 @@ export default class Dashboard extends Vue {
 		}, 1000)
 
 
-		// this.getMember();
-		// if (this.doLive) this.member_interval = setInterval(this.getMember, 1000);
 
-		Chart.register(...registerables);
 	}
 }
 </script>
@@ -367,10 +400,11 @@ export default class Dashboard extends Vue {
 	// I copy ideal:
 	// background-color: rgba(255, 255, 255, 0.11);
 
+	box-shadow: 0px 0px 3px #000000;
+
 	// exact from ideal:
 	background-color: rgb(31, 41, 55);
 
-	// box-shadow: 0px 0px 10px #000000;
 	margin: 0px 5px 20px 5px;
 	// width: 100%;
 	// width: 50%;
@@ -401,6 +435,7 @@ export default class Dashboard extends Vue {
 }
 
 #live {
+	display: none;
 	color: rgb(255, 191, 191);
 	height: 1.2rem;
 	padding: 0px 10px 0px 10px;
@@ -525,7 +560,7 @@ export default class Dashboard extends Vue {
 			color: hsl(0, 0%, 55%);
 			margin-right: 5px;
 
-			font-weight: bold;
+			font-weight: 500;
 		}
 
 		#m_datetime {
@@ -563,30 +598,59 @@ export default class Dashboard extends Vue {
 	justify-content: center;
 	align-items: center;
 
-	div {
+	h3 {
+		align-self: flex-start;
+		margin-bottom: 20px;
+		color: white;
+		font-size: 30px;
+		font-weight: bold;
+		font-family: "Inter", system-ui;
+	}
+
+	#status-box {
+		box-sizing: border-box;
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
-		align-items: center;
+		align-items: flex-start;
 
-		// background-color: #333536c5; // mine
-		background-color: rgb(31, 41, 55); // ideal's
-
-		// box-shadow: 0px 0px 10px #000000;
-		box-sizing: border-box;
 		width: 400px;
 
 		padding: 20px 20px;
 		margin: 0px 5px 25px 5px;
 
-		p {
-			align-self: flex-start;
-			margin-bottom: 20px;
-			color: white;
-			font-size: 30px;
-			font-weight: bold;
-			font-family: Inter, system-ui;
+		box-shadow: 0px 0px 3px #000000;
+		background-color: rgb(31, 41, 55); // ideal's
+
+		.status-item {
+			display: flex;
+			justify-content: flex-start;
+			align-items: center;
+
+			p {
+				margin: 5px 6px;
+
+				color: white;
+				font-size: 18px;
+				font-family: "Inter", system-ui;
+			}
 		}
+	}
+
+	#resource-box {
+		box-sizing: border-box;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+
+		width: 400px;
+
+		padding: 20px 20px;
+		margin: 0px 5px 25px 5px;
+
+		box-shadow: 0px 0px 3px #000000;
+		background-color: rgb(31, 41, 55); // ideal's
 	}
 }
 
@@ -620,11 +684,18 @@ export default class Dashboard extends Vue {
 			flex-wrap: wrap;
 
 			width: 100%;
+
+			#offline-location {
+				display: none;
+			}
 		}
 	}
 	#statistic {
 		width: 95%;
-		div {
+		#status-box {
+			width: 100%;
+		}
+		#resource-box {
 			width: 100%;
 		}
 	}

@@ -124,7 +124,7 @@ nav {
 
 			width: 90%;
 			border-radius: 0;
-			border-bottom: 1px solid rgb(150, 150, 150);
+			border-bottom: 1px solid rgba(94, 105, 122, 0.534);
 
 			font-family: "Inter", "Quicksand";
 			font-size: 18px;
