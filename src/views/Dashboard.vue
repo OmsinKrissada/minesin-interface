@@ -173,6 +173,10 @@
 				</div>
 			</span>
 		</div>
+		<footer>
+			<p>Commit: {{ commit_hash }}</p>
+			<p>Built at: {{ build_date }}</p>
+		</footer>
 	</div>
 </template>
 
@@ -187,6 +191,7 @@ import { io, Socket } from 'socket.io-client';
 import * as Helper from '@/Helper';
 import { DefaultEventsMap } from 'node_modules/socket.io-client/build/typed-events';
 import router from '@/router';
+import { commit_hash, build_date } from '@/config.json';
 
 @Options({
 	components: {
@@ -212,6 +217,9 @@ export default class Dashboard extends Vue {
 	online_members: any[] = [];
 	offline_members: any[] = [];
 	neterror = false;
+
+	commit_hash = commit_hash;
+	build_date = build_date;
 
 	fullDurationString(duration: moment.Duration): string {
 		let str = '';
@@ -656,6 +664,25 @@ export default class Dashboard extends Vue {
 
 		box-shadow: 0px 0px 3px #000000;
 		background-color: rgb(31, 41, 55); // ideal's
+	}
+}
+
+footer {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+
+	padding: 20px 40px;
+
+	border-top: #00495c44 2px solid;
+
+	p {
+		margin: 3px;
+		color: hsla(213, 45%, 36%, 0.842);
+		font-size: 16px;
+		font-family: "Inter";
+		font-weight: 500;
 	}
 }
 

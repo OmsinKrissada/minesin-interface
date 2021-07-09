@@ -12,7 +12,7 @@
 
 <script lang="ts">
 
-import { Vue, Options } from 'vue-class-component'
+import { Vue, Options } from 'vue-class-component';
 
 import NavBar from "@/components/NavBar.vue";
 import { endpoint } from './config.json';
@@ -24,8 +24,8 @@ import { endpoint } from './config.json';
 })
 export default class App extends Vue {
 	created() {
-		console.log(this.$route.path)
-		localStorage.setItem('endpoint', endpoint)
+		console.log(this.$route.path);
+		localStorage.setItem('endpoint', endpoint);
 	}
 }
 
@@ -59,9 +59,9 @@ export default class App extends Vue {
 	-moz-osx-font-smoothing: grayscale;
 }
 
-body::-webkit-scrollbar {
+/* body::-webkit-scrollbar {
 	width: 0rem;
-}
+} */
 
 #app {
 	position: relative;
