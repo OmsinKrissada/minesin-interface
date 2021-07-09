@@ -178,14 +178,15 @@
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
-import RingLoader from 'vue-spinner/src/RingLoader.vue'
+import RingLoader from 'vue-spinner/src/RingLoader.vue';
 import ProgressBar from '@/components/ProgressBar.vue';
 
 import { AxiosError } from 'axios';
 import moment from 'moment';
-import { io, Socket } from 'socket.io-client'
+import { io, Socket } from 'socket.io-client';
 import * as Helper from '@/Helper';
 import { DefaultEventsMap } from 'node_modules/socket.io-client/build/typed-events';
+import router from '@/router';
 
 @Options({
 	components: {
@@ -239,7 +240,11 @@ export default class Dashboard extends Vue {
 		this.socket = io("https://omsinkrissada.sytes.net", { path: '/socketio/minecraft', auth: { token: localStorage.accessToken } });
 		this.socket.on('connect_error', (err) => {
 			console.error(err);
-		})
+			if (err.message.includes('token')) {
+				localStorage.removeItem('accessToken');
+				router.push('/');
+			}
+		});
 		this.socket.on('connect', () => {
 			console.log('connected');
 			this.connectionErrorText = '';
@@ -252,12 +257,12 @@ export default class Dashboard extends Vue {
 				const offlines = [];
 				for (const member of data) {
 					if (member.online) {
-						member.datetime = member.onlineSince ? `${this.fullDurationString(moment.duration(moment().valueOf() - moment(member.onlineSince).valueOf(), 'ms'))}` : 'invalid time format'
-						member.location = member.location ?? ''
+						member.datetime = member.onlineSince ? `${this.fullDurationString(moment.duration(moment().valueOf() - moment(member.onlineSince).valueOf(), 'ms'))}` : 'invalid time format';
+						member.location = member.location ?? '';
 						onlines.push(member);
 					} else {
-						member.datetime = member.offlineSince ? `${moment(member.lastseen).fromNow()}` : 'invalid date format'
-						member.location = 'Offline'
+						member.datetime = member.offlineSince ? `${moment(member.lastseen).fromNow()}` : 'invalid date format';
+						member.location = 'Offline';
 						offlines.push(member);
 
 					}
@@ -270,15 +275,15 @@ export default class Dashboard extends Vue {
 				updateOfflineMemberTime();
 			}).catch((err: AxiosError) => {
 				if (err.message) {
-					console.error(err.message)
+					console.error(err.message);
 					this.neterror = true;
 				}
-			}).finally(() => this.loading_member = false)
-		})
+			}).finally(() => this.loading_member = false);
+		});
 
 		this.socket.on('memberLocationUpdate', updatedMember => {
-			this.online_members.filter(member => member.uuid == updatedMember.uuid)[0].location = updatedMember.location
-		})
+			this.online_members.filter(member => member.uuid == updatedMember.uuid)[0].location = updatedMember.location;
+		});
 
 		this.socket.on('memberStatusUpdate', updatedMember => {
 			if (updatedMember.online) {
@@ -286,50 +291,50 @@ export default class Dashboard extends Vue {
 				this.offline_members = this.offline_members.filter(member => member.uuid != updatedMember.uuid);
 
 				member.onlineSince = new Date();
-				member.location = member.location ?? ''
+				member.location = member.location ?? '';
 				if (member.location == 'offline') member.location = '';
-				this.online_members.push(member)
+				this.online_members.push(member);
 				updateOnlineMemberTime();
 			} else {
 				const member = this.online_members.filter(member => member.uuid == updatedMember.uuid)[0];
 				this.online_members = this.online_members.filter(member => member.uuid != updatedMember.uuid);
 
 				member.offlineSince = new Date();
-				member.location = 'offline'
-				this.offline_members.unshift(member)
+				member.location = 'offline';
+				this.offline_members.unshift(member);
 				updateOfflineMemberTime();
 			}
-		})
+		});
 
 		this.socket.on('resourcesStatus', res => {
 			this.cpuPercent = res.cpuPercent.toFixed(2);
 			this.ramPercent = res.ramPercent.toFixed(2);
-		})
+		});
 		this.socket.on('serversStatus', res => {
 			this.serverStatus = res;
-		})
+		});
 		this.socket.on('disconnect', () => {
-			console.log('disconnected')
+			console.log('disconnected');
 			this.connectionErrorText = 'Disconnected, trying to reconnect . . .';
-		})
+		});
 		// ----------------------------------------------------
 
 		const updateOnlineMemberTime = () => {
 			this.online_members.map(member => {
 				const durationms = moment().valueOf() - moment(member.onlineSince).valueOf();
-				member.datetime = `${this.fullDurationString(moment.duration(durationms, 'ms'))}`
+				member.datetime = `${this.fullDurationString(moment.duration(durationms, 'ms'))}`;
 			});
-		}
+		};
 		const updateOfflineMemberTime = () => {
 			this.offline_members.map(member => {
-				member.datetime = member.offlineSince ? moment(member.offlineSince).fromNow() : 'invalid time format'
+				member.datetime = member.offlineSince ? moment(member.offlineSince).fromNow() : 'invalid time format';
 			});
-		}
+		};
 
 		this.timeUpdateInterval = setInterval(() => {
 			updateOnlineMemberTime();
 			updateOfflineMemberTime();
-		}, 1000)
+		}, 1000);
 
 
 

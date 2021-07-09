@@ -75,7 +75,7 @@
 <script lang="ts">
 import router from '@/router';
 import { Options, Vue } from 'vue-class-component';
-import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
+import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
 
 import axios, { AxiosError } from 'axios';
 
@@ -112,7 +112,7 @@ export default class Cover extends Vue {
 				this.image = this.nextImage;
 				this.currentImgOpacity = 1;
 			}, 1000);
-		}, 5000)
+		}, 5000);
 	}
 	unmounted() {
 		clearInterval(this.imageInterval);
@@ -134,19 +134,19 @@ export default class Cover extends Vue {
 			this.errortxt = '';
 			localStorage.setItem('accessToken', res.data.accessToken);
 			localStorage.setItem('userSkinURL', res.data.skinURL);
-			router.push('dashboard')
+			router.push('dashboard');
 		}).catch((err: AxiosError) => {
-			if (err.response?.status == 400)
-				this.errortxt = 'Invalid username or password'
+			if (err.response?.status == 401)
+				this.errortxt = 'Invalid username or password';
 			else if (err.message == 'Network Error') {
-				this.errortxt = 'Please check your internet connection, if problem persists, contact Omsin.'
+				this.errortxt = 'Please check your internet connection.';
 			}
 			else {
-				console.error(err)
+				console.error(err);
 				this.errortxt = 'An error has occured: ' + err.message;
 			}
-		}).finally(() => this.sending = false)
-		e.preventDefault()
+		}).finally(() => this.sending = false);
+		e.preventDefault();
 	}
 }
 
