@@ -320,6 +320,7 @@ export default class Dashboard extends Vue {
 		});
 		this.socket.on('serversStatus', res => {
 			this.serverStatus = res;
+			this.serverStatus.sort();
 		});
 		this.socket.on('disconnect', () => {
 			console.log('disconnected');
