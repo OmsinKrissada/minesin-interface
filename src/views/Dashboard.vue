@@ -473,7 +473,7 @@ export default class Dashboard extends Vue {
 	justify-content: space-evenly;
 	align-items: stretch;
 
-	width: 700px;
+	// width: 700px;
 	// max-width: 90vmin;
 
 	// background-color: antiquewhite;
