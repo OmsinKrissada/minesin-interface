@@ -46,10 +46,10 @@ export default class NavBar extends Vue {
 	}
 
 	logout() {
-		localStorage.removeItem('accessToken')
-		console.log('logged out, cleared token')
+		localStorage.removeItem('accessToken');
+		console.log('logged out, cleared token');
 
-		this.$router.push('/')
+		this.$router.push('/');
 	}
 
 	mounted() {
@@ -189,9 +189,9 @@ nav {
 
 		p {
 			padding: 8px;
-			font-family: "Quicksand", "Inter", sans-serif;
-			font-size: 1.2rem;
-			font-weight: bold;
+			font-family: "Inter", sans-serif;
+			font-size: 1rem;
+			font-weight: 500;
 			color: rgb(182, 182, 182);
 		}
 

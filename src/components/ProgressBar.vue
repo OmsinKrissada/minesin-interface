@@ -10,7 +10,7 @@
 
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent } from 'vue';
 
 const Component = defineComponent({
 	props: {
@@ -20,13 +20,13 @@ const Component = defineComponent({
 	data: function () {
 		return {
 			barStyles: {}
-		}
+		};
 	},
 	watch: {
 		percent: function () {
 			let color;
 			if (this.percent > 85) color = '#f55442';
-			else if (this.percent > 70) color = '#d49816'
+			else if (this.percent > 70) color = '#d49816';
 			else color = '#4bc588';
 			this.barStyles = {
 				width: this.percent + '%',
@@ -34,7 +34,7 @@ const Component = defineComponent({
 			};
 		}
 	}
-})
+});
 export default Component
 </script>
 
@@ -53,12 +53,12 @@ export default Component
 
 .label {
 	color: white;
-	font-size: 18px;
-	font-weight: 600;
+	font-size: 16px;
+	font-weight: 500;
 	margin-bottom: 5px;
 }
 .bar-box {
-	height: 35px;
+	height: 3px;
 	background-color: rgb(58, 71, 88);
 	border-radius: 8px;
 	width: 100%;
@@ -77,6 +77,6 @@ export default Component
 	align-self: flex-end;
 	margin-top: 5px;
 	color: white;
-	font-size: 16px;
+	font-size: 14px;
 }
 </style>

@@ -12,7 +12,6 @@
 			<span id="leftbox" class="box">
 				<span id="labelbox">
 					<h2>Members</h2>
-					<button id="live" class="box">LIVE</button>
 				</span>
 				<div class="member-box">
 					<p v-if="error" style="color: #ff0000aa; margin: auto">
@@ -28,8 +27,6 @@
 								<img
 									:src="online_member.skinURL"
 									alt="skin"
-									width="50"
-									height="50"
 									id="m_skin"
 								/>
 								<div>
@@ -81,8 +78,6 @@
 								<img
 									:src="offline_member.skinURL"
 									alt="skin"
-									width="50"
-									height="50"
 									id="m_skin"
 								/>
 								<div>
@@ -127,6 +122,10 @@
 			<span id="statistic" class="box">
 				<div id="status-box" class="box">
 					<h3>Server Status</h3>
+					<pulse-loader
+						:loading="serverStatus.length < 1"
+						id="server_loader"
+					></pulse-loader>
 					<div v-for="status in serverStatus" v-bind:key="status">
 						<div class="status-item">
 							<svg
@@ -183,6 +182,7 @@
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
 import RingLoader from 'vue-spinner/src/RingLoader.vue';
+import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
 import ProgressBar from '@/components/ProgressBar.vue';
 
 import { AxiosError } from 'axios';
@@ -196,6 +196,7 @@ import { commit_hash, build_date } from '@/config.json';
 @Options({
 	components: {
 		RingLoader,
+		PulseLoader,
 		ProgressBar
 	},
 })
@@ -315,12 +316,14 @@ export default class Dashboard extends Vue {
 		});
 
 		this.socket.on('resourcesStatus', res => {
+			console.log('resource');
 			this.cpuPercent = res.cpuPercent.toFixed(2);
 			this.ramPercent = res.ramPercent.toFixed(2);
 		});
 		this.socket.on('serversStatus', res => {
+			console.log('status');
+
 			this.serverStatus = res;
-			this.serverStatus.sort();
 		});
 		this.socket.on('disconnect', () => {
 			console.log('disconnected');
@@ -403,7 +406,7 @@ export default class Dashboard extends Vue {
 	// margin-right: 10vw;
 	// margin-left: 10vw;
 
-	justify-content: space-evenly;
+	justify-content: center;
 	align-items: flex-start;
 }
 
@@ -440,27 +443,12 @@ export default class Dashboard extends Vue {
 		// color: #00ccff;
 		color: white;
 		font-family: Inter;
-		font-size: 1.5rem;
+		font-size: 1.2rem;
 	}
 }
 
 .greyscale {
 	filter: grayscale(3);
-}
-
-#live {
-	display: none;
-	color: rgb(255, 191, 191);
-	height: 1.2rem;
-	padding: 0px 10px 0px 10px;
-	margin-left: 10px;
-	background-color: rgba(255, 0, 0, 0.178);
-	border: 1px solid red;
-	border-radius: 100px;
-	font-family: system-ui;
-	font-size: 0.8rem;
-	text-align: center;
-	line-height: 0px;
 }
 
 .box {
@@ -527,13 +515,14 @@ export default class Dashboard extends Vue {
 			margin: 6px;
 		}
 		#m_skin {
+			width: 2.3rem;
 			margin: 5px;
 			border-radius: 3px;
 			box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.678);
 			image-rendering: pixelated;
 		}
 		#m_ign {
-			font-size: 1.25rem;
+			font-size: 1rem;
 			font-family: "Inter";
 			font-weight: 500;
 			// text-shadow: 0px 0px 2px black;
@@ -541,7 +530,7 @@ export default class Dashboard extends Vue {
 		#m_uuid {
 			// color: rgb(112, 112, 112);
 			color: rgb(110, 110, 110);
-			font-size: 0.8rem;
+			font-size: 0.7rem;
 			font-family: "Consolas", "Quicksand", "Courier New", Courier,
 				monospace;
 			font-weight: 500;
@@ -567,18 +556,19 @@ export default class Dashboard extends Vue {
 		}
 
 		p {
-			font-size: 0.9rem;
+			font-size: 0.8rem;
 		}
 
 		#m_status {
-			color: hsl(0, 0%, 55%);
+			color: hsl(0, 0%, 65%);
 			margin-right: 5px;
 
 			font-weight: 500;
 		}
 
 		#m_datetime {
-			color: hsl(0, 0%, 85%);
+			// color: hsl(0, 0%, 85%);
+			color: #ffffff;
 			// font-size: 0.8rem;
 			// font-weight: bold;
 			// text-shadow: 0px 0px 2px black;
@@ -616,8 +606,8 @@ export default class Dashboard extends Vue {
 		align-self: flex-start;
 		margin-bottom: 20px;
 		color: white;
-		font-size: 30px;
-		font-weight: bold;
+		font-size: 1.2rem;
+		font-weight: 600;
 		font-family: "Inter", system-ui;
 	}
 
@@ -645,7 +635,7 @@ export default class Dashboard extends Vue {
 				margin: 5px 6px;
 
 				color: white;
-				font-size: 18px;
+				font-size: 16px;
 				font-family: "Inter", system-ui;
 			}
 		}
@@ -680,14 +670,14 @@ footer {
 
 	p {
 		margin: 3px;
-		color: hsla(213, 45%, 36%, 0.842);
-		font-size: 16px;
+		color: hsla(213, 43%, 49%, 0.842);
+		font-size: 14px;
 		font-family: "Inter";
 		font-weight: 500;
 	}
 }
 
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 830px) {
 	.hide-mobile {
 		display: none;
 	}
@@ -708,8 +698,18 @@ footer {
 		flex-direction: column;
 		justify-content: flex-start;
 		align-items: flex-start;
+		margin: 0.3rem;
+		padding: 0.5rem;
 		#lefter {
-			// flex-wrap: wrap;
+			#m_skin {
+				width: 2rem;
+			}
+			#m_ign {
+				font-size: 1rem;
+			}
+			#m_uuid {
+				font-size: 0.6rem;
+			}
 		}
 		#righter {
 			flex-direction: row;
