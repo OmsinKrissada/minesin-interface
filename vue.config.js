@@ -8,8 +8,7 @@ module.exports = {
 			});
 	},
 
-	// publicPath: "/minecraft/"
-	publicPath: '/minecraft',
+	// publicPath: '/minecraft',
 
 	assetsDir: 'assets'
 };
