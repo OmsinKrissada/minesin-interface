@@ -14,21 +14,11 @@
 					<h2>Members</h2>
 				</span>
 				<div class="member-box">
-					<p v-if="error" style="color: #ff0000aa; margin: auto">
-						Error loading list, try relog
-					</p>
+					<p v-if="error" style="color: #ff0000aa; margin: auto">Error loading list, try relog</p>
 					<div name="list" tag="div" id="online-members-box">
-						<span
-							v-for="online_member in online_members"
-							:key="online_member"
-							class="box member-item onlinemem"
-						>
+						<span v-for="online_member in online_members" :key="online_member" class="box member-item onlinemem">
 							<span id="lefter">
-								<img
-									:src="online_member.skinURL"
-									alt="skin"
-									id="m_skin"
-								/>
+								<img :src="online_member.skinURL" alt="skin" id="m_skin" />
 								<div>
 									<h4 id="m_ign">{{ online_member.ign }}</h4>
 									<p id="m_uuid" class="hide-mobile">
@@ -38,48 +28,25 @@
 							</span>
 							<span id="righter">
 								<div>
-									<p
-										id="m_status"
-										v-if="online_member.datetime"
-									>
-										Online for
-									</p>
+									<p id="m_status" v-if="online_member.datetime">Online for</p>
 									<p id="m_datetime">
 										{{ online_member.datetime }}
 									</p>
 								</div>
 								<div class="m-location" id="m-location-online">
 									<p>{{ online_member.location }}</p>
-									<svg
-										style="width: 20px; height: 20px"
-										viewBox="0 0 24 24"
-										class="icon"
-									>
-										<path
-											fill="currentColor"
-											d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"
-										/>
+									<svg style="width: 20px; height: 20px" viewBox="0 0 24 24" class="icon">
+										<path fill="currentColor" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" />
 									</svg>
 								</div>
 							</span>
 						</span>
 					</div>
-					<div
-						id="member-border"
-						v-if="online_members.length > 0"
-					></div>
+					<div id="member-border" v-if="online_members.length > 0"></div>
 					<div name="" tag="p">
-						<span
-							v-for="offline_member in offline_members"
-							:key="offline_member"
-							class="box member-item offlinemem"
-						>
+						<span v-for="offline_member in offline_members" :key="offline_member" class="box member-item offlinemem">
 							<span id="lefter">
-								<img
-									:src="offline_member.skinURL"
-									alt="skin"
-									id="m_skin"
-								/>
+								<img :src="offline_member.skinURL" alt="skin" id="m_skin" />
 								<div>
 									<h4 id="m_ign">{{ offline_member.ign }}</h4>
 									<p id="m_uuid" class="hide-mobile">
@@ -89,12 +56,7 @@
 							</span>
 							<span id="righter">
 								<div>
-									<p
-										id="m_status"
-										v-if="offline_member.datetime"
-									>
-										Last seen
-									</p>
+									<p id="m_status" v-if="offline_member.datetime">Last seen</p>
 									<p id="m_datetime">
 										{{ offline_member.datetime }}
 									</p>
@@ -103,15 +65,8 @@
 									<p id="offline-location">
 										{{ offline_member.location }}
 									</p>
-									<svg
-										style="width: 20px; height: 20px"
-										viewBox="0 0 24 24"
-										class="icon"
-									>
-										<path
-											fill="currentColor"
-											d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"
-										/>
+									<svg style="width: 20px; height: 20px" viewBox="0 0 24 24" class="icon">
+										<path fill="currentColor" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" />
 									</svg>
 								</div>
 							</span>
@@ -122,33 +77,14 @@
 			<span id="statistic" class="box">
 				<div id="status-box" class="box">
 					<h3>Server Status</h3>
-					<pulse-loader
-						:loading="serverStatus.length < 1"
-						id="server_loader"
-					></pulse-loader>
+					<pulse-loader :loading="serverStatus.length < 1" id="server_loader"></pulse-loader>
 					<div v-for="status in serverStatus" v-bind:key="status">
 						<div class="status-item">
-							<svg
-								style="width: 20px; height: 20px"
-								viewBox="0 0 24 24"
-								class="icon"
-								v-if="status.online"
-							>
-								<path
-									fill="hsl(165, 86%, 42%)"
-									d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"
-								/>
+							<svg style="width: 20px; height: 20px" viewBox="0 0 24 24" class="icon" v-if="status.online">
+								<path fill="hsl(165, 86%, 42%)" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" />
 							</svg>
-							<svg
-								style="width: 20px; height: 20px"
-								viewBox="0 0 24 24"
-								class="icon"
-								v-if="!status.online"
-							>
-								<path
-									fill="rgb(94, 105, 122)"
-									d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"
-								/>
+							<svg style="width: 20px; height: 20px" viewBox="0 0 24 24" class="icon" v-if="!status.online">
+								<path fill="rgb(94, 105, 122)" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" />
 							</svg>
 							<p>
 								{{ status.name }}
@@ -159,16 +95,8 @@
 				</div>
 				<div id="resource-box" class="box">
 					<h3>Resources</h3>
-					<progress-bar
-						title="CPU usage"
-						:percent="cpuPercent"
-						class="box"
-					></progress-bar>
-					<progress-bar
-						title="RAM usage"
-						:percent="ramPercent"
-						class="box"
-					></progress-bar>
+					<progress-bar title="CPU usage" :percent="cpuPercent" class="box"></progress-bar>
+					<progress-bar title="RAM usage" :percent="ramPercent" class="box"></progress-bar>
 				</div>
 			</span>
 		</div>
@@ -180,31 +108,30 @@
 </template>
 
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component';
-import RingLoader from 'vue-spinner/src/RingLoader.vue';
-import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
-import ProgressBar from '@/components/ProgressBar.vue';
+import { Options, Vue } from "vue-class-component";
+import RingLoader from "vue-spinner/src/RingLoader.vue";
+import PulseLoader from "vue-spinner/src/PulseLoader.vue";
+import ProgressBar from "@/components/ProgressBar.vue";
 
-import { AxiosError } from 'axios';
-import moment from 'moment';
-import { io, Socket } from 'socket.io-client';
-import * as Helper from '@/Helper';
-import { DefaultEventsMap } from 'node_modules/socket.io-client/build/typed-events';
-import router from '@/router';
-import { commit_hash, build_date } from '@/config.json';
+import { AxiosError } from "axios";
+import moment from "moment";
+import { io, Socket } from "socket.io-client";
+import * as Helper from "@/Helper";
+import { DefaultEventsMap } from "node_modules/socket.io-client/build/typed-events";
+import router from "@/router";
+import { commit_hash, build_date } from "@/config.json";
 
 @Options({
 	components: {
 		RingLoader,
 		PulseLoader,
 		ProgressBar
-	},
+	}
 })
 export default class Dashboard extends Vue {
-
 	socket?: Socket<DefaultEventsMap, DefaultEventsMap>;
 	timeUpdateInterval?: number;
-	connectionErrorText = 'Connecting . . .';
+	connectionErrorText = "Connecting . . .";
 
 	loading_member = true;
 	loading_cpuChart = true;
@@ -223,7 +150,7 @@ export default class Dashboard extends Vue {
 	build_date = build_date;
 
 	fullDurationString(duration: moment.Duration): string {
-		let str = '';
+		let str = "";
 		const days = Math.floor(duration.asDays());
 		const hours = duration.hours();
 		const mins = duration.minutes();
@@ -235,73 +162,75 @@ export default class Dashboard extends Vue {
 		return str;
 	}
 
-
 	unmounted(): void {
 		clearInterval(this.timeUpdateInterval);
 		this.socket?.disconnect();
-		console.log('unmount detected, disconnected from socket and removed time update interval');
+		console.log("unmount detected, disconnected from socket and removed time update interval");
 	}
 
 	mounted(): void {
-
 		// ---------------------- SOCKET ----------------------
 
-		this.socket = io("https://omsinkrissada.sytes.net", { path: '/socketio/minecraft', auth: { token: localStorage.accessToken } });
-		this.socket.on('connect_error', (err) => {
+		this.socket = io("https://minesin.krissada.com", { path: "/socket/", auth: { token: localStorage.accessToken } });
+		this.socket.on("connect_error", err => {
 			console.error(err);
-			if (err.message.includes('token')) {
-				localStorage.removeItem('accessToken');
-				router.push('/');
+			if (err.message.includes("token")) {
+				localStorage.removeItem("accessToken");
+				router.push("/");
 			}
 		});
-		this.socket.on('connect', () => {
-			console.log('connected');
-			this.connectionErrorText = '';
+		this.socket.on("connect", () => {
+			console.log("connected");
+			this.connectionErrorText = "";
 
 			// Get initial member data
-			Helper.get('/members').then(data => {
-				console.log('got data');
+			Helper.get("/members")
+				.then(data => {
+					console.log("got data");
 
-				const onlines = [];
-				const offlines = [];
-				for (const member of data) {
-					if (member.online) {
-						member.datetime = member.onlineSince ? `${this.fullDurationString(moment.duration(moment().valueOf() - moment(member.onlineSince).valueOf(), 'ms'))}` : 'invalid time format';
-						member.location = member.location ?? '';
-						onlines.push(member);
-					} else {
-						member.datetime = member.offlineSince ? `${moment(member.lastseen).fromNow()}` : 'invalid date format';
-						member.location = 'Offline';
-						offlines.push(member);
-
+					const onlines = [];
+					const offlines = [];
+					for (const member of data) {
+						if (member.online) {
+							member.datetime = member.onlineSince
+								? `${this.fullDurationString(moment.duration(moment().valueOf() - moment(member.onlineSince).valueOf(), "ms"))}`
+								: "invalid time format";
+							member.location = member.location ?? "";
+							onlines.push(member);
+						} else {
+							member.datetime = member.offlineSince ? `${moment(member.lastseen).fromNow()}` : "invalid date format";
+							member.location = "Offline";
+							offlines.push(member);
+						}
 					}
-				}
-				onlines.sort((a, b) => moment(a.onlineSince).valueOf() - moment(b.onlineSince).valueOf());
-				offlines.sort((a, b) => moment(b.offlineSince).valueOf() - moment(a.offlineSince).valueOf());
-				this.online_members = onlines;
-				this.offline_members = offlines;
-				updateOnlineMemberTime();
-				updateOfflineMemberTime();
-			}).catch((err: AxiosError) => {
-				if (err.message) {
-					console.error(err.message);
-					this.neterror = true;
-				}
-			}).finally(() => this.loading_member = false);
+					onlines.sort((a, b) => moment(a.onlineSince).valueOf() - moment(b.onlineSince).valueOf());
+					offlines.sort((a, b) => moment(b.offlineSince).valueOf() - moment(a.offlineSince).valueOf());
+					this.online_members = onlines;
+					this.offline_members = offlines;
+					updateOnlineMemberTime();
+					updateOfflineMemberTime();
+				})
+				.catch((err: AxiosError) => {
+					if (err.message) {
+						console.error(err.message);
+						this.neterror = true;
+					}
+				})
+				.finally(() => (this.loading_member = false));
 		});
 
-		this.socket.on('memberLocationUpdate', updatedMember => {
+		this.socket.on("memberLocationUpdate", updatedMember => {
 			this.online_members.filter(member => member.uuid == updatedMember.uuid)[0].location = updatedMember.location;
 		});
 
-		this.socket.on('memberStatusUpdate', updatedMember => {
+		this.socket.on("memberStatusUpdate", updatedMember => {
 			if (updatedMember.online) {
 				const member = this.offline_members.filter(member => member.uuid == updatedMember.uuid)[0];
 				this.offline_members = this.offline_members.filter(member => member.uuid != updatedMember.uuid);
 
 				member.onlineSince = new Date();
-				member.location = member.location ?? '';
-				if (member.location == 'offline') member.location = '';
+				member.location = member.location ?? "";
+				if (member.location == "offline") member.location = "";
 				this.online_members.push(member);
 				updateOnlineMemberTime();
 			} else {
@@ -309,37 +238,37 @@ export default class Dashboard extends Vue {
 				this.online_members = this.online_members.filter(member => member.uuid != updatedMember.uuid);
 
 				member.offlineSince = new Date();
-				member.location = 'offline';
+				member.location = "offline";
 				this.offline_members.unshift(member);
 				updateOfflineMemberTime();
 			}
 		});
 
-		this.socket.on('resourcesStatus', res => {
-			console.log('resource');
+		this.socket.on("resourcesStatus", res => {
+			console.log("resource");
 			this.cpuPercent = res.cpuPercent.toFixed(2);
 			this.ramPercent = res.ramPercent.toFixed(2);
 		});
-		this.socket.on('serversStatus', res => {
-			console.log('status');
+		this.socket.on("serversStatus", res => {
+			console.log("status");
 
 			this.serverStatus = res;
 		});
-		this.socket.on('disconnect', () => {
-			console.log('disconnected');
-			this.connectionErrorText = 'Disconnected, trying to reconnect . . .';
+		this.socket.on("disconnect", () => {
+			console.log("disconnected");
+			this.connectionErrorText = "Disconnected, trying to reconnect . . .";
 		});
 		// ----------------------------------------------------
 
 		const updateOnlineMemberTime = () => {
 			this.online_members.map(member => {
 				const durationms = moment().valueOf() - moment(member.onlineSince).valueOf();
-				member.datetime = `${this.fullDurationString(moment.duration(durationms, 'ms'))}`;
+				member.datetime = `${this.fullDurationString(moment.duration(durationms, "ms"))}`;
 			});
 		};
 		const updateOfflineMemberTime = () => {
 			this.offline_members.map(member => {
-				member.datetime = member.offlineSince ? moment(member.offlineSince).fromNow() : 'invalid time format';
+				member.datetime = member.offlineSince ? moment(member.offlineSince).fromNow() : "invalid time format";
 			});
 		};
 
@@ -347,9 +276,6 @@ export default class Dashboard extends Vue {
 			updateOnlineMemberTime();
 			updateOfflineMemberTime();
 		}, 1000);
-
-
-
 	}
 }
 </script>
@@ -531,8 +457,7 @@ export default class Dashboard extends Vue {
 			// color: rgb(112, 112, 112);
 			color: rgb(110, 110, 110);
 			font-size: 0.7rem;
-			font-family: "Consolas", "Quicksand", "Courier New", Courier,
-				monospace;
+			font-family: "Consolas", "Quicksand", "Courier New", Courier, monospace;
 			font-weight: 500;
 		}
 	}
