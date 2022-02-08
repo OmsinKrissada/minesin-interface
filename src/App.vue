@@ -15,7 +15,7 @@
 import { Vue, Options } from 'vue-class-component';
 
 import NavBar from "@/components/NavBar.vue";
-import { endpoint } from './config.json';
+import { http_endpoint } from './config.json';
 
 @Options({
 	components: {
@@ -25,7 +25,7 @@ import { endpoint } from './config.json';
 export default class App extends Vue {
 	created() {
 		console.log(this.$route.path);
-		localStorage.setItem('endpoint', endpoint);
+		localStorage.setItem('endpoint', http_endpoint);
 	}
 }
 

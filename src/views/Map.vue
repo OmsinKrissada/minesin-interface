@@ -11,7 +11,7 @@
 <script lang="ts">
 import axios from 'axios';
 import { Options, Vue } from 'vue-class-component'
-import { endpoint } from '../config.json';
+import { http_endpoint } from '../config.json';
 import * as Helper from '../Helper';
 
 
@@ -22,7 +22,7 @@ export default class Map extends Vue {
 	demo = `<html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Document</title></head><body><h1 style="color: #ff0000aa;">Error loading, please check your internet connection.</h1></body></html>`
 	page = '';
 	srcuri = '';
-	endpoint = localStorage.endpoint;
+	http_endpoint = localStorage.http_endpoint;
 	async mounted() {
 		// let data: string;
 		// try {

@@ -4,21 +4,15 @@
 			id="cover-image-next"
 			class="cover-image"
 			v-bind:style="{
-				backgroundImage:
-					'linear-gradient(to bottom,	rgba(0, 0, 0, 0.25),	rgba(0, 0, 0, 0.5)), url(' +
-					nextImage +
-					')',
+				backgroundImage: 'linear-gradient(to bottom,	rgba(0, 0, 0, 0.25),	rgba(0, 0, 0, 0.5)), url(' + nextImage + ')'
 			}"
 		></div>
 		<div
 			id="cover-image-current"
 			class="cover-image"
 			v-bind:style="{
-				backgroundImage:
-					'linear-gradient(to bottom,	rgba(0, 0, 0, 0.25),	rgba(0, 0, 0, 0.5)), url(' +
-					image +
-					')',
-				opacity: currentImgOpacity,
+				backgroundImage: 'linear-gradient(to bottom,	rgba(0, 0, 0, 0.25),	rgba(0, 0, 0, 0.5)), url(' + image + ')',
+				opacity: currentImgOpacity
 			}"
 		></div>
 		<div id="box">
@@ -28,39 +22,17 @@
 			</div>
 			<div id="login">
 				<form action="" @submit="authenticate">
-					<input
-						type="text"
-						class="field"
-						v-model="user"
-						placeholder="In-game name"
-						autocomplete="username"
-						autofocus
-					/>
-					<input
-						type="password"
-						class="field"
-						v-model="pass"
-						placeholder="Password"
-						autocomplete="current-password"
-					/>
+					<input type="text" class="field" v-model="user" placeholder="In-game name" autocomplete="username" autofocus />
+					<input type="password" class="field" v-model="pass" placeholder="Password" autocomplete="current-password" />
 					<div id="proceed-button-area">
-						<button
-							v-if="!sending"
-							id="proceed-button"
-							class="button"
-						>
+						<button v-if="!sending" id="proceed-button" class="button">
 							<p>Proceed</p>
 							<!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 							<svg>
-								<use
-									xlink:href="@/assets/right-arrow.svg#Layer_1"
-								></use>
+								<use xlink:href="@/assets/right-arrow.svg#Layer_1"></use>
 							</svg>
 						</button>
-						<pulse-loader
-							:loading="sending"
-							id="loader"
-						></pulse-loader>
+						<pulse-loader :loading="sending" id="loader"></pulse-loader>
 					</div>
 				</form>
 				<p id="error-text">
@@ -71,13 +43,13 @@
 	</div>
 </template>
 
-
 <script lang="ts">
-import router from '@/router';
-import { Options, Vue } from 'vue-class-component';
-import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
+import router from "@/router";
+import { Options, Vue } from "vue-class-component";
+import PulseLoader from "vue-spinner/src/PulseLoader.vue";
+import config from "@/config.json";
 
-import axios, { AxiosError } from 'axios';
+import axios, { AxiosError } from "axios";
 
 @Options({
 	components: {
@@ -85,12 +57,12 @@ import axios, { AxiosError } from 'axios';
 	}
 })
 export default class Cover extends Vue {
-	user = '';
-	pass = '';
-	errortxt = '';
+	user = "";
+	pass = "";
+	errortxt = "";
 	sending = false;
-	image = '';
-	nextImage = '';
+	image = "";
+	nextImage = "";
 	currentImgOpacity = 1;
 	imageInterval: number | undefined;
 
@@ -101,10 +73,6 @@ export default class Cover extends Vue {
 	mounted() {
 		this.image = this.randomCoverImage();
 		this.imageInterval = setInterval(() => {
-
-
-
-
 			this.nextImage = this.randomCoverImage();
 			this.currentImgOpacity = 0;
 
@@ -119,40 +87,39 @@ export default class Cover extends Vue {
 	}
 
 	authenticate(e: any) {
-		const endpoint = localStorage.endpoint;
+		const http_endpoint = config.http_endpoint;
 		if (this.sending) {
 			e.preventDefault();
 			return;
-		} else if (this.user == '' || this.pass == '') {
+		} else if (this.user == "" || this.pass == "") {
 			e.preventDefault();
-			this.errortxt = 'Both fields are required';
+			this.errortxt = "Both fields are required";
 			return;
 		}
 
 		this.sending = true;
-		axios.post(endpoint + '/login', { username: this.user, password: this.pass }, { timeoutErrorMessage: 'Time out!' }).then(res => {
-			this.errortxt = '';
-			localStorage.setItem('accessToken', res.data.accessToken);
-			localStorage.setItem('userSkinURL', res.data.skinURL);
-			router.push('dashboard');
-		}).catch((err: AxiosError) => {
-			if (err.response?.status == 401)
-				this.errortxt = 'Invalid username or password';
-			else if (err.message == 'Network Error') {
-				this.errortxt = 'Please check your internet connection.';
-			}
-			else {
-				console.error(err);
-				this.errortxt = 'An error has occured: ' + err.message;
-			}
-		}).finally(() => this.sending = false);
+		axios
+			.post(http_endpoint + "/login", { username: this.user, password: this.pass }, { timeoutErrorMessage: "Time out!" })
+			.then(res => {
+				this.errortxt = "";
+				localStorage.setItem("accessToken", res.data.accessToken);
+				localStorage.setItem("userSkinURL", res.data.skinURL);
+				router.push("dashboard");
+			})
+			.catch((err: AxiosError) => {
+				if (err.response?.status == 401) this.errortxt = "Invalid username or password";
+				else if (err.message == "Network Error") {
+					this.errortxt = "Please check your internet connection.";
+				} else {
+					console.error(err);
+					this.errortxt = "An error has occured: " + err.message;
+				}
+			})
+			.finally(() => (this.sending = false));
 		e.preventDefault();
 	}
 }
-
-
 </script>
-
 
 <style lang="scss" scoped>
 // @function imgnum() {
@@ -209,9 +176,7 @@ $imgnum: var(--img-num);
 		color: hsl(33, 100%, 86%);
 	}
 	h1 {
-		font-family: "Minecraftia", "Trebuchet MS", "Lucida Sans Unicode",
-			"Lucida Grande", "Lucida Sans", Arial, sans-serif, "Arial Narrow",
-			Arial, sans-serif;
+		font-family: "Minecraftia", "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans", Arial, sans-serif, "Arial Narrow", Arial, sans-serif;
 		font-size: 1.2rem;
 		// font-size: clamp(0px, 1.5rem, 6vmin);
 		font-weight: 100;

@@ -14,7 +14,7 @@
 					<h2>Members</h2>
 				</span>
 				<div class="member-box">
-					<p v-if="error" style="color: #ff0000aa; margin: auto">Error loading list, try relog</p>
+					<p v-if="neterror" style="color: #ff0000aa; margin: auto">Error loading list, try relog {{ neterror }}</p>
 					<div name="list" tag="div" id="online-members-box">
 						<span v-for="online_member in online_members" :key="online_member" class="box member-item onlinemem">
 							<span id="lefter">
@@ -44,7 +44,12 @@
 					</div>
 					<div id="member-border" v-if="online_members.length > 0"></div>
 					<div name="" tag="p">
-						<span v-for="offline_member in offline_members" :key="offline_member" class="box member-item offlinemem">
+						<span
+							v-for="offline_member in offline_members"
+							:key="offline_member"
+							class="box member-item offlinemem"
+							:style="offline_member.datetime.includes('month') || offline_member.datetime.includes('year') ? { filter: 'brightness(0.6)' } : {}"
+						>
 							<span id="lefter">
 								<img :src="offline_member.skinURL" alt="skin" id="m_skin" />
 								<div>
@@ -56,7 +61,7 @@
 							</span>
 							<span id="righter">
 								<div>
-									<p id="m_status" v-if="offline_member.datetime">Last seen</p>
+									<p id="m_status" v-if="offline_member.datetime">Away for</p>
 									<p id="m_datetime">
 										{{ offline_member.datetime }}
 									</p>
@@ -83,12 +88,11 @@
 							<svg style="width: 20px; height: 20px" viewBox="0 0 24 24" class="icon" v-if="status.online">
 								<path fill="hsl(165, 86%, 42%)" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" />
 							</svg>
-							<svg style="width: 20px; height: 20px" viewBox="0 0 24 24" class="icon" v-if="!status.online">
+							<svg style="width: 20px; height: 20px" viewBox="0 0 24 24" class="icon" v-else>
 								<path fill="rgb(94, 105, 122)" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" />
 							</svg>
 							<p>
 								{{ status.name }}
-								<!-- {{ status.online ? "Online" : "Offline" }} -->
 							</p>
 						</div>
 					</div>
@@ -113,13 +117,12 @@ import RingLoader from "vue-spinner/src/RingLoader.vue";
 import PulseLoader from "vue-spinner/src/PulseLoader.vue";
 import ProgressBar from "@/components/ProgressBar.vue";
 
-import { AxiosError } from "axios";
-import moment from "moment";
+import { formatDistanceToNow } from "date-fns";
 import { io, Socket } from "socket.io-client";
 import * as Helper from "@/Helper";
-import { DefaultEventsMap } from "node_modules/socket.io-client/build/typed-events";
 import router from "@/router";
 import { commit_hash, build_date } from "@/config.json";
+import config from "@/config.json";
 
 @Options({
 	components: {
@@ -129,7 +132,7 @@ import { commit_hash, build_date } from "@/config.json";
 	}
 })
 export default class Dashboard extends Vue {
-	socket?: Socket<DefaultEventsMap, DefaultEventsMap>;
+	socket?: any;
 	timeUpdateInterval?: number;
 	connectionErrorText = "Connecting . . .";
 
@@ -140,27 +143,14 @@ export default class Dashboard extends Vue {
 	cpuPercent = 0;
 	ramPercent = 0;
 
-	serverStatus = [];
+	serverStatus: any[] = [];
 
 	online_members: any[] = [];
 	offline_members: any[] = [];
-	neterror = false;
+	neterror = null;
 
 	commit_hash = commit_hash;
 	build_date = build_date;
-
-	fullDurationString(duration: moment.Duration): string {
-		let str = "";
-		const days = Math.floor(duration.asDays());
-		const hours = duration.hours();
-		const mins = duration.minutes();
-		const secs = duration.seconds();
-		if (days) str += `${days}d `;
-		if (hours) str += `${hours}h `;
-		if (mins) str += `${mins}m `;
-		if (secs) str += `${secs}s`;
-		return str;
-	}
 
 	unmounted(): void {
 		clearInterval(this.timeUpdateInterval);
@@ -171,7 +161,7 @@ export default class Dashboard extends Vue {
 	mounted(): void {
 		// ---------------------- SOCKET ----------------------
 
-		this.socket = io("https://minesin.krissada.com", { path: "/socket/", auth: { token: localStorage.accessToken } });
+		this.socket = io(config.ws_endpoint, { path: config.ws_path, auth: { token: localStorage.accessToken } });
 		this.socket.on("connect_error", err => {
 			console.error(err);
 			if (err.message.includes("token")) {
@@ -192,31 +182,46 @@ export default class Dashboard extends Vue {
 					const offlines = [];
 					for (const member of data) {
 						if (member.online) {
-							member.datetime = member.onlineSince
-								? `${this.fullDurationString(moment.duration(moment().valueOf() - moment(member.onlineSince).valueOf(), "ms"))}`
-								: "invalid time format";
 							member.location = member.location ?? "";
 							onlines.push(member);
 						} else {
-							member.datetime = member.offlineSince ? `${moment(member.lastseen).fromNow()}` : "invalid date format";
 							member.location = "Offline";
 							offlines.push(member);
 						}
 					}
-					onlines.sort((a, b) => moment(a.onlineSince).valueOf() - moment(b.onlineSince).valueOf());
-					offlines.sort((a, b) => moment(b.offlineSince).valueOf() - moment(a.offlineSince).valueOf());
+					onlines.sort((a, b) => a.since - b.since);
+					offlines.sort((a, b) => b.since - a.since);
 					this.online_members = onlines;
 					this.offline_members = offlines;
-					updateOnlineMemberTime();
-					updateOfflineMemberTime();
 				})
-				.catch((err: AxiosError) => {
-					if (err.message) {
-						console.error(err.message);
-						this.neterror = true;
-					}
-				})
+				// .catch((err: AxiosError) => {
+				// 	if (err.message) {
+				// 		console.error(err.message);
+				// 		this.neterror = err.message;
+				// 	}
+				// })
 				.finally(() => (this.loading_member = false));
+		});
+
+		this.socket.on("membersUpdate", members => {
+			console.log("got data");
+
+			const onlines = [];
+			const offlines = [];
+			for (const member of members) {
+				if (member.online) {
+					member.location = member.location ?? "";
+					onlines.push(member);
+				} else {
+					member.location = "Offline";
+					offlines.push(member);
+				}
+			}
+			onlines.sort((a, b) => a.since - b.since);
+			offlines.sort((a, b) => b.since - a.since);
+			this.online_members = onlines;
+			this.offline_members = offlines;
+			this.loading_member = false;
 		});
 
 		this.socket.on("memberLocationUpdate", updatedMember => {
@@ -228,11 +233,10 @@ export default class Dashboard extends Vue {
 				const member = this.offline_members.filter(member => member.uuid == updatedMember.uuid)[0];
 				this.offline_members = this.offline_members.filter(member => member.uuid != updatedMember.uuid);
 
-				member.onlineSince = new Date();
+				member.since = new Date();
 				member.location = member.location ?? "";
 				if (member.location == "offline") member.location = "";
 				this.online_members.push(member);
-				updateOnlineMemberTime();
 			} else {
 				const member = this.online_members.filter(member => member.uuid == updatedMember.uuid)[0];
 				this.online_members = this.online_members.filter(member => member.uuid != updatedMember.uuid);
@@ -240,7 +244,6 @@ export default class Dashboard extends Vue {
 				member.offlineSince = new Date();
 				member.location = "offline";
 				this.offline_members.unshift(member);
-				updateOfflineMemberTime();
 			}
 		});
 
@@ -262,13 +265,13 @@ export default class Dashboard extends Vue {
 
 		const updateOnlineMemberTime = () => {
 			this.online_members.map(member => {
-				const durationms = moment().valueOf() - moment(member.onlineSince).valueOf();
-				member.datetime = `${this.fullDurationString(moment.duration(durationms, "ms"))}`;
+				member.datetime = Helper.fullDurationString(new Date().getTime() - member.since);
+				// member.datetime = `${formatDuration(intervalToDuration({ start: new Date(), end: member.since }))}`;
 			});
 		};
 		const updateOfflineMemberTime = () => {
 			this.offline_members.map(member => {
-				member.datetime = member.offlineSince ? moment(member.offlineSince).fromNow() : "invalid time format";
+				member.datetime = member.since ? formatDistanceToNow(member.since) : "invalid time format";
 			});
 		};
 
