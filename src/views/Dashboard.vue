@@ -48,7 +48,7 @@
 							v-for="offline_member in offline_members"
 							:key="offline_member"
 							class="box member-item offlinemem"
-							:style="offline_member.datetime.includes('month') || offline_member.datetime.includes('year') ? { filter: 'brightness(0.6)' } : {}"
+							:style="offline_member.datetime?.includes('month') || offline_member.datetime?.includes('year') ? { filter: 'brightness(0.6)' } : {}"
 						>
 							<span id="lefter">
 								<img :src="offline_member.skinURL" alt="skin" id="m_skin" />
